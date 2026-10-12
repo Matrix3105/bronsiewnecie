@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gry – Broń się w necie</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="pasek-nawigacji">
+  <a class="logo" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+    <span>Broń się w necie</span>
+  </a>
+  <div class="menu-glowne">
+    <a href="index.html">Start</a>
+    <a href="gry.html" class="aktywny">Gry</a>
+    <a href="index.html#zasady">Zasady</a>
+    <a href="index.html#pomoc">Pomoc</a>
+  </div>
+</nav>
+
+<main class="strona">
+  <h1 style="font-size:clamp(2.2rem,6vw,3.4rem)">Gry</h1>
+  <p class="opis" style="color:var(--tekst-przygaszony);margin:8px 0 28px">Wybierz grę i sprawdź, ile wiesz o bezpieczeństwie w sieci. Kolejne gry już w drodze.</p>
+
+  <section id="wybor-gier">
+    <div class="wybor-gier">
+      <div class="karta-gry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <h3>Wiadomość czy pułapka?</h3>
+        <p>Rozpoznaj phishing w SMS-ach i mailach.</p>
+        <button class="przycisk" data-gra="gra-phishing">Graj</button>
+      </div>
+      <div class="karta-gry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>
+        <h3>Laboratorium haseł</h3>
+        <p>Zbuduj hasło, którego nie złamie komputer.</p>
+        <button class="przycisk" data-gra="gra-haslo">Graj</button>
+      </div>
+      <div class="karta-gry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 015 .5c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg>
+        <h3>Co zrobisz?</h3>
+        <p>Pięć sytuacji z życia internauty.</p>
+        <button class="przycisk" data-gra="gra-sytuacje">Graj</button>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h4"/></svg>
+        <h3>Fake news czy prawda?</h3>
+        <p>Sprawdź, czy rozpoznasz fałszywe newsy i zmanipulowane zdjęcia.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <h3>Prywatność w social mediach</h3>
+        <p>Co możesz publikować, a czego lepiej nie pokazywać nikomu obcemu.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/><path d="M3 4h3l2.5 11h9L20 8H7"/></svg>
+        <h3>Bezpieczne zakupy online</h3>
+        <p>Fałszywe sklepy, podejrzane okazje i bezpieczne płatności.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>
+        <h3>Stop cyberprzemocy</h3>
+        <p>Jak reagować na hejt, wyzwiska i wyśmiewanie w sieci.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a14 14 0 0118 0M6 12.5a9 9 0 0112 0M9 16a4 4 0 016 0"/><path d="M12 19.5h.01"/></svg>
+        <h3>Publiczne Wi-Fi</h3>
+        <p>Kiedy darmowy internet jest pułapką i jak się chronić.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+      <div class="karta-gry wkrotce">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+        <h3>Logowanie dwuetapowe</h3>
+        <p>Dlaczego jeden kod więcej potrafi uratować Twoje konto.</p>
+        <span class="plakietka">Coming soon</span>
+      </div>
+    </div>
+    <button class="przycisk przycisk-kontur losuj-gre" id="przycisk-losuj-gre">Losuj grę</button>
+  </section>
+
+  <section class="panel-gry" id="panel-gry" hidden>
+    <div id="gra-phishing" hidden>
+      <h2>Wiadomość czy pułapka?</h2>
+      <p>Oceń, czy możesz zaufać wiadomości.</p>
+      <div id="pytania-phishing"></div>
+    </div>
+    <div id="gra-haslo" hidden>
+      <h2>Laboratorium haseł</h2>
+      <p>Spełnij wszystkie wymagania i zatwierdź hasło. To tylko ćwiczenie: nic nie jest nigdzie wysyłane, ale nie wpisuj tu swojego prawdziwego hasła.</p>
+      <input class="pole-hasla" type="text" id="pole-hasla" autocomplete="off" spellcheck="false" aria-label="Hasło testowe" placeholder="Wpisz hasło testowe">
+      <ul class="lista-wymagan" id="lista-wymagan"></ul>
+      <div class="czas-lamania" id="czas-lamania" aria-live="polite"></div>
+      <button class="przycisk" id="zatwierdz-haslo">Zatwierdź hasło</button>
+      <div class="komentarz" id="komentarz-haslo" aria-live="polite" style="margin-top:14px"></div>
+      <p style="font-size:.9rem">Wskazówka: długie zdanie, które tylko Ty rozumiesz, bije krótkie hasło pełne znaków.</p>
+    </div>
+    <div id="gra-sytuacje" hidden>
+      <h2>Co zrobisz?</h2>
+      <p>Wybierz najlepszą reakcję.</p>
+      <div id="pytania-sytuacje"></div>
+    </div>
+    <button class="przycisk przycisk-kontur wroc-do-wyboru" id="wroc-do-wyboru">Wróć do wyboru gry</button>
+  </section>
+</main>
+
+<footer class="stopka">
+  <span>© 2026 <b>Broń się w necie</b></span>
+  <span>CERT Polska <b>8080</b> · Telefon Zaufania <b>116 111</b> · Alarmowy <b>112</b></span>
+</footer>
+<script src="js/gry.js"></script>
+</body>
+</html>
