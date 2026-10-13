@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ucz się – Broń się w necie</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="pasek-nawigacji">
+  <a class="logo" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+    <span>Broń się w necie</span>
+  </a>
+  <div class="menu-glowne">
+    <a href="index.html">Start</a>
+    <a href="gry.html">Gry i quizy</a>
+    <a href="ucz-sie.html" class="aktywny">Ucz się</a>
+    <a href="index.html#zasady">Zasady</a>
+    <a href="index.html#pomoc">Pomoc</a>
+  </div>
+</nav>
+
+<main class="strona">
+  <h1 style="font-size:clamp(2.2rem,6vw,3.4rem)">Ucz się</h1>
+  <p class="opis" style="color:var(--tekst-przygaszony);margin:8px 0 24px;max-width:60ch">Zanim zagrasz, poznaj zasady. Każda lekcja odpowiada jednej grze albo jednemu quizowi i kończy się przyciskiem, który od razu go uruchamia.</p>
+  <nav class="spis-lekcji" aria-label="Spis lekcji"><a href="#lekcja-phishing">Phishing</a><a href="#lekcja-skrzynka">Skrzynka pocztowa</a><a href="#lekcja-haslo">Silne hasła</a><a href="#lekcja-sytuacje">Codzienne decyzje w sieci</a><a href="#lekcja-fake-news">Fake news i dezinformacja</a><a href="#lekcja-banka">Bańka informacyjna i algorytmy</a><a href="#lekcja-prywatnosc">Prywatność w social mediach</a><a href="#lekcja-zakupy">Bezpieczne zakupy online</a><a href="#lekcja-cyberprzemoc">Cyberprzemoc</a><a href="#lekcja-wifi">Publiczne Wi-Fi</a><a href="#lekcja-dwuetapowe">Logowanie dwuetapowe (2FA)</a><a href="#lekcja-rozmowa">Rozmowa z nieznajomym w sieci</a><a href="#lekcja-lowca-oszustw">Szybkie rozpoznawanie oszustw</a><a href="#lekcja-ustawienia">Ustawienia konta i prywatności</a><a href="#lekcja-gry-online">Bezpieczeństwo w grach online</a></nav>
+  <div class="lekcje">
+    <article class="lekcja" id="lekcja-phishing">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Phishing: jak rozpoznać pułapkę</h2>
+      <p class="wstep">Phishing to wiadomość, która podszywa się pod kogoś zaufanego (bank, kuriera, znajomego), żeby wyłudzić dane albo pieniądze.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Presja czasu: „konto wygasa dziś”, „masz 30 minut”.</li><li>Dziwny adres nadawcy lub linku. Liczy się końcówka adresu przed pierwszym ukośnikiem, a nie ładna nazwa na początku.</li><li>Prośba o hasło, kod BLIK, dane karty lub PESEL.</li><li>Drobne dopłaty i „darmowe nagrody” jako przynęta.</li><li>„Znajomy” z nowego numeru, który prosi o pieniądze lub kod.</li><li>Co robić: nie klikaj, wejdź na stronę sam, zadzwoń do nadawcy innym sposobem. Podejrzany SMS przekaż na numer 8080 (CERT Polska).</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Zatrzymaj się i sprawdź, zanim klikniesz.</p>
+      <a class="przycisk" href="gry.html#gra-phishing">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-skrzynka">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Skrzynka pocztowa: sprawdzanie maili</h2>
+      <p class="wstep">Oszuści kopiują wygląd prawdziwych firm. Dlatego zawsze patrz na szczegóły, a nie tylko na logo i ładny układ.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Sprawdź adres nadawcy, nie tylko jego nazwę wyświetlaną.</li><li>Najedź na link i porównaj, dokąd prowadzi. W adresie bank.centrum-pomocy.xyz prawdziwą domeną jest centrum-pomocy.xyz.</li><li>Uważaj na załączniki od obcych, zwłaszcza pliki .exe i .zip.</li><li>Prawdziwa wiadomość rzadko żąda pilnych działań i danych przez link.</li><li>Nie każdy mail z linkiem to oszustwo. Ważne, czy link prowadzi do tej samej domeny, z której przyszła wiadomość.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Zamiast klikać link z maila, wejdź na stronę samodzielnie.</p>
+      <a class="przycisk" href="gry.html#gra-skrzynka">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-haslo">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Silne hasła</h2>
+      <p class="wstep">Hasło to klucz do Twoich kont. Im jest dłuższe i bardziej nieprzewidywalne, tym trudniej je złamać.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Użyj co najmniej 12 znaków. Im dłużej, tym lepiej.</li><li>Mieszaj małe i wielkie litery, cyfry i znaki specjalne.</li><li>Unikaj oczywistych wzorców: 123, qwerty, hasło, imię, data urodzenia.</li><li>Dobrym pomysłem jest długie zdanie albo kilka losowych słów.</li><li>Jedno konto, jedno hasło. Menedżer haseł pomoże je zapamiętać.</li><li>Nigdy nie podawaj hasła nikomu, nawet znajomemu.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Długość hasła jest ważniejsza niż skomplikowane znaki.</p>
+      <a class="przycisk" href="gry.html#gra-haslo">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-sytuacje">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Codzienne decyzje w sieci</h2>
+      <p class="wstep">W sieci co chwilę podejmujesz małe decyzje, które wpływają na Twoje bezpieczeństwo.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Obcy, który prosi o zdjęcie, dane lub pieniądze, to sygnał alarmowy. Zablokuj i powiedz dorosłemu.</li><li>Instaluj aplikacje tylko z oficjalnych sklepów.</li><li>Nie otwieraj załączników od nieznajomych.</li><li>Okno „wykryto wirusy, zadzwoń” to straszak. Zamknij kartę.</li><li>Gdy zgubisz telefon, zmień hasła i zablokuj go zdalnie.</li><li>Gdy coś Cię niepokoi, powiedz o tym zaufanej osobie.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Gdy masz wątpliwości, zatrzymaj się i zapytaj dorosłego.</p>
+      <a class="przycisk" href="gry.html#gra-sytuacje">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-fake-news">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Fake news i dezinformacja</h2>
+      <p class="wstep">Fałszywe informacje rozchodzą się szybciej niż prawdziwe, bo wywołują emocje i chce się je udostępniać.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Sprawdź źródło: kto to napisał i czy da się go znaleźć.</li><li>Uważaj na emocje: krzykliwe nagłówki, wielkie litery, „udostępnij, zanim usuną”.</li><li>Szukaj tej samej informacji w kilku niezależnych serwisach.</li><li>Zdjęcia sprawdzaj wyszukiwaniem obrazem. Mogą być stare lub przerobione.</li><li>Deepfake to nagranie wygenerowane komputerowo. Zwracaj uwagę na nienaturalny ruch ust i dziwne cienie.</li><li>Wiarygodne źródła podają źródła informacji i sprostowania błędów.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Najpierw sprawdź, potem udostępnij.</p>
+      <a class="przycisk" href="gry.html#gra-fake-news">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-banka">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Bańka informacyjna i algorytmy</h2>
+      <p class="wstep">Aplikacje pokazują to, co według algorytmu Cię zainteresuje. Jeśli klikasz ciągle to samo, dostajesz coraz więcej tego samego.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Algorytm uczy się z tego, co oglądasz, lajkujesz i jak długo czytasz.</li><li>Bańka informacyjna zmniejsza liczbę różnych poglądów, które widzisz.</li><li>Treści potwierdzające Twoje zdanie wydają się wiarygodne, ale nie zawsze są.</li><li>Świadomie szukaj innych spojrzeń i wyważonych źródeł.</li><li>Szukaj tematów samodzielnie, zamiast czekać na rekomendacje.</li><li>Rozmawiaj z osobami, które mają inne zdanie.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> To Ty decydujesz, co widzisz, a nie algorytm.</p>
+      <a class="przycisk" href="gry.html#gra-banka">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-prywatnosc">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Prywatność w social mediach</h2>
+      <p class="wstep">To, co trafi do sieci, trudno później cofnąć. Warto zastanowić się, co i komu pokazujesz.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Nie umieszczaj w nazwie i opisie adresu, szkoły ani innych danych osobowych.</li><li>Przytnij lub zasłoń szczegóły na zdjęciach: kody z biletów, numery, tablice.</li><li>Ustaw konto jako prywatne i akceptuj tylko osoby, które znasz.</li><li>Sprawdzaj uprawnienia aplikacji i odmawiaj tych, które nie są potrzebne.</li><li>Usuwaj nieużywane konta albo zabezpieczaj je nowym hasłem.</li><li>Quizy w sieci często pytają o dane z pytań zabezpieczających, np. pierwszego zwierzaka.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Co raz trafi do sieci, trudno cofnąć.</p>
+      <a class="przycisk" href="gry.html#gra-prywatnosc">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-zakupy">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Bezpieczne zakupy online</h2>
+      <p class="wstep">Oszuści tworzą fałszywe sklepy i ogłoszenia, które wyglądają jak okazje.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Zbyt niska cena i presja czasu to sygnały ostrzegawcze.</li><li>Sprawdzaj opinie w niezależnych miejscach i dane firmy.</li><li>Kłódka i https oznaczają tylko szyfrowanie połączenia, a nie uczciwość sklepu.</li><li>Płać przez znane systemy płatności, a nie przelewem na prywatne konto.</li><li>Żeby otrzymać pieniądze, nie podajesz danych karty.</li><li>Niezamówione paczki z fakturą: nie płać pod presją i najpierw to wyjaśnij.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Jeśli oferta wydaje się zbyt dobra, by była prawdziwa, pewnie taka jest.</p>
+      <a class="przycisk" href="gry.html#gra-zakupy">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-cyberprzemoc">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Cyberprzemoc: jak reagować</h2>
+      <p class="wstep">Cyberprzemoc to wyśmiewanie, groźby lub szantaż w sieci. Nigdy nie jest Twoją winą.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Nie odpowiadaj agresją. Zrób zrzut ekranu jako dowód.</li><li>Zablokuj osobę i zgłoś treść platformie.</li><li>Powiedz zaufanej dorosłej osobie: rodzicowi, nauczycielowi, pedagogowi.</li><li>Nie udostępniaj ośmieszających zdjęć ani nagrań. Wesprzyj osobę, której dotyczą.</li><li>Szantaż, np. groźbę publikacji zdjęć, zgłoś dorosłym i na policję, nie spełniaj żądań.</li><li>Telefon Zaufania dla dzieci i młodzieży 116 111 jest bezpłatny.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Nie jesteś sam i to nie Twoja wina.</p>
+      <a class="przycisk" href="gry.html#gra-cyberprzemoc">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-wifi">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Publiczne Wi-Fi</h2>
+      <p class="wstep">Darmowe sieci są wygodne, ale ktoś może podsłuchiwać Twój ruch albo podszywać się pod sieć lokalu.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Zapytaj obsługę, jak nazywa się oficjalna sieć. Oszuści tworzą podobne nazwy.</li><li>Nie loguj się do banku, poczty ani ważnych kont przez publiczne Wi-Fi.</li><li>Użyj danych z telefonu albo zaufanego VPN-a.</li><li>Wyłącz automatyczne łączenie z otwartymi sieciami i usuń sieć po użyciu.</li><li>Nie pobieraj „aktualizacji”, o które prosi sieć.</li><li>Hasło na kartce w kawiarni nie gwarantuje prywatności.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Ważne sprawy załatwiaj w zaufanej sieci.</p>
+      <a class="przycisk" href="gry.html#gra-wifi">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-dwuetapowe">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Logowanie dwuetapowe (2FA)</h2>
+      <p class="wstep">Dwuetapowe logowanie dodaje do hasła drugi składnik, więc samo hasło już nie wystarczy włamywaczowi.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Drugim składnikiem może być kod z aplikacji, SMS lub klucz sprzętowy.</li><li>Włącz je najpierw na poczcie e-mail i w bankowości.</li><li>Aplikacja uwierzytelniająca jest bezpieczniejsza niż SMS.</li><li>Kod, o który nie prosiłeś, to znak, że ktoś zna Twoje hasło. Zmień je od razu.</li><li>Nigdy nie podawaj kodu przez telefon ani czat.</li><li>Kody zapasowe zapisz w bezpiecznym miejscu.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Nawet jeśli ktoś pozna hasło, dwuetapowe logowanie często go zatrzyma.</p>
+      <a class="przycisk" href="gry.html#gra-dwuetapowe">Rozwiąż quiz</a>
+    </article>
+    <article class="lekcja" id="lekcja-rozmowa">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Rozmowa z nieznajomym w sieci</h2>
+      <p class="wstep">Nie każdy, kto pisze miło, ma dobre zamiary. Obcy często zaczynają od prezentów lub komplementów.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Darmowe waluty i nagrody od obcych to przynęta.</li><li>Nie loguj się przez cudze linki i nie podawaj hasła.</li><li>Nie zdradzaj wieku, miejscowości, szkoły ani numeru telefonu.</li><li>Prośby o zdjęcia lub „sekret” od obcego to sygnał alarmowy.</li><li>Co robić: zablokuj, zgłoś w grze, powiedz dorosłemu.</li><li>Nie musisz być uprzejmy wobec kogoś, kto Cię naciska.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Masz prawo przerwać rozmowę w każdej chwili.</p>
+      <a class="przycisk" href="gry.html#gra-rozmowa">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-lowca-oszustw">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Szybkie rozpoznawanie oszustw</h2>
+      <p class="wstep">Oszuści liczą na to, że zareagujesz bez zastanowienia. Warto wyrobić sobie nawyk szybkiej oceny wiadomości.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Presja czasu i groźby to najczęstszy znak oszustwa.</li><li>Obietnica nagrody, pieniędzy albo darmowych rzeczy od obcych to przynęta.</li><li>Prośba o hasło, kod lub dane karty zawsze powinna budzić podejrzenia.</li><li>Prawdziwe powiadomienia zwykle nie wymagają natychmiastowych działań ani podania danych.</li><li>Nie każda wiadomość to oszustwo. Zwykłe wiadomości od rodziny, znajomych i szkoły są bezpieczne.</li><li>Im częściej oceniasz wiadomości świadomie, tym szybciej rozpoznasz pułapkę.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Zanim zareagujesz, zapytaj siebie: czego ta wiadomość ode mnie chce?</p>
+      <a class="przycisk" href="gry.html#gra-lowca-oszustw">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-ustawienia">
+      <span class="plakietka-rodzaju gra">Gra</span>
+      <h2>Ustawienia konta i prywatności</h2>
+      <p class="wstep">Dobre ustawienia chronią Cię nawet wtedy, gdy popełnisz błąd. Warto je sprawdzić zaraz po założeniu konta.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Ustaw profil jako prywatny i akceptuj tylko znane osoby.</li><li>Wyłącz lokalizację w postach i na zdjęciach.</li><li>Pozwól pisać do Ciebie tylko osobom, które znasz.</li><li>Włącz logowanie dwuetapowe.</li><li>Włącz akceptowanie oznaczeń na zdjęciach.</li><li>Nie pokazuj numeru telefonu publicznie.</li><li>Na wspólnych komputerach nie zapamiętuj logowania i zawsze się wylogowuj.</li><li>Dawaj aplikacjom tylko te uprawnienia, których naprawdę potrzebują.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Ustawienia domyślne nie zawsze są bezpieczne. Sprawdź je sam.</p>
+      <a class="przycisk" href="gry.html#gra-ustawienia">Zagraj w grę</a>
+    </article>
+    <article class="lekcja" id="lekcja-gry-online">
+      <span class="plakietka-rodzaju quiz">Quiz</span>
+      <h2>Bezpieczeństwo w grach online</h2>
+      <p class="wstep">Gry online to także miejsce oszustw i niebezpiecznych kontaktów. Kilka nawyków zabezpieczy Twoje konto i Ciebie.</p>
+      <h3>Na co zwrócić uwagę</h3>
+      <ul class="wskazowki"><li>Nikomu nie podawaj hasła. Obsługa gry nigdy o nie nie prosi.</li><li>Handluj i wymieniaj się tylko przez oficjalne systemy w grze.</li><li>Nie pobieraj modów, cheatów i plików od nieznajomych.</li><li>Kupuj walutę w grze tylko w oficjalnym sklepie.</li><li>Uważaj na losowe skrzynki z nagrodami i ustal limit wydatków.</li><li>Gdy ktoś Cię wyzywa lub naciska, wycisz go, zgłoś i powiedz dorosłemu.</li><li>Nie wysyłaj zdjęć dokumentów ani danych osobowych na czacie.</li><li>Rób przerwy i dbaj o sen.</li></ul>
+      <p class="zapamietaj"><b>Zapamiętaj:</b> Dobra gra to taka, w której czujesz się bezpiecznie.</p>
+      <a class="przycisk" href="gry.html#gra-gry-online">Rozwiąż quiz</a>
+    </article>
+  </div>
+</main>
+
+<footer class="stopka">
+  <span>© 2026 <b>Broń się w necie</b></span>
+  <span>CERT Polska <b>8080</b> · Telefon Zaufania <b>116 111</b> · Alarmowy <b>112</b></span>
+</footer>
+</body>
+</html>
