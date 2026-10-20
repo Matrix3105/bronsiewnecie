@@ -1,179 +1,115 @@
-:root {
-  color-scheme: dark;
-  --tlo: #181028;
-  --tlo-jasniejsze: #21153a;
-  --panel: #2a1b4d;
-  --obramowanie: #43306f;
-  --fiolet: #7a45f0;
-  --fiolet-jasny: #b794ff;
-  --liliowy: #e2d6ff;
-  --tekst: #ece6f8;
-  --tekst-przygaszony: #b6a9d4;
-  --dobrze: #7fe3b2;
-  --zle: #ff8fa3;
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+:root{
+  color-scheme:dark;
+  --bg:#0b0e15; --line:#26324a; --text:#dfe6f2; --dim:#7f8ca3;
+  --amber:#ffb454; --cyan:#5ad1e6; --red:#ff4d5e; --ok:#6fe3a1;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { background: var(--tlo); scroll-behavior: smooth; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 84px); }
-body { font-family: Nunito, system-ui, sans-serif; font-size: 1.05rem; line-height: 1.6; color: var(--tekst); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
-h1, h2, h3 { font-family: Fredoka, system-ui, sans-serif; font-weight: 700; line-height: 1.1; color: var(--liliowy); }
-a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--fiolet-jasny); outline-offset: 3px; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:#10162a;color:var(--text);font:15px/1.5 "Chakra Petch",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.screen{display:none}
+.screen.on{display:block;height:100%;overflow:auto}
+#s-game.on{display:flex;flex-direction:column;overflow:hidden}
 
-.pasek-nawigacji { position: fixed; top: 0; left: 0; right: 0; z-index: 10; height: calc(70px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 32px 0; display: flex; align-items: center; justify-content: space-between; background: rgba(24, 16, 40, .92); border-bottom: 1px solid var(--obramowanie); }
-.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--liliowy); font: 700 1.4rem Fredoka, sans-serif; }
-.logo svg { width: 30px; height: 30px; stroke: var(--fiolet-jasny); }
-.menu-glowne { display: flex; gap: 6px; }
-.menu-glowne a { color: var(--tekst-przygaszony); text-decoration: none; font-weight: 800; font-size: .95rem; padding: 8px 14px; border-radius: 10px; }
-.menu-glowne a:hover, .menu-glowne a.aktywny { color: var(--liliowy); background: var(--panel); }
+/* ==========================================================
+   2. EKRANY: START / WYNIK
+   ========================================================== */
+.center{max-width:580px;margin:8vh auto 0;padding:16px}
+.center h1{font-size:44px;line-height:1.05;margin:0 0 14px}
+.center p{color:var(--dim);margin:0 0 12px}
+.center ul{color:var(--dim);margin:0 0 14px;padding-left:20px}
+.lesson{border-left:3px solid var(--amber);padding-left:12px;color:var(--text)!important}
+.btn{background:var(--amber);color:#1a1205;border:0;border-radius:4px;padding:10px 18px;font-weight:700;margin:8px 8px 0 0}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
 
-.przycisk { display: inline-block; font: 800 1rem Nunito, sans-serif; cursor: pointer; text-decoration: none; color: #fff; background: var(--fiolet); border: 2px solid var(--fiolet); border-radius: 12px; padding: 12px 26px; transition: background .2s, border-color .2s; }
-.przycisk:hover:not(:disabled) { background: #8f5cff; border-color: #8f5cff; }
-.przycisk:disabled { opacity: .5; cursor: default; }
-.przycisk-kontur { background: transparent; color: var(--liliowy); border-color: var(--obramowanie); }
-.przycisk-kontur:hover:not(:disabled) { background: var(--panel); border-color: var(--fiolet-jasny); }
-
-.strona { width: 100%; flex: 1; max-width: 1040px; margin: 0 auto; padding: 110px 24px 40px; }
-
-.start-naglowek { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; min-height: 72vh; }
-.start-naglowek h1 { font-size: clamp(2.8rem, 7vw, 4.6rem); }
-.start-naglowek p { color: var(--tekst-przygaszony); font-size: 1.2rem; margin: 18px 0 30px; max-width: 34ch; }
-.przyciski-w-rzedzie { display: flex; gap: 14px; flex-wrap: wrap; }
-
-.telefon { background: var(--tlo-jasniejsze); border: 2px solid var(--obramowanie); border-radius: 28px; padding: 28px 22px; transform: rotate(2deg); }
-.sms { background: var(--panel); border-radius: 18px 18px 18px 4px; padding: 14px 16px; }
-.sms small { display: block; color: var(--fiolet-jasny); font-weight: 800; margin-bottom: 4px; }
-.sms u { color: var(--zle); text-decoration-color: var(--zle); word-break: break-all; }
-.podpis-sms { margin-top: 18px; color: var(--tekst-przygaszony); font-weight: 600; text-align: center; }
-
-.sekcja { padding: 56px 0 8px; }
-.sekcja > h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); }
-.sekcja > .opis { color: var(--tekst-przygaszony); margin: 8px 0 28px; max-width: 56ch; }
-
-.lista-zasad { list-style: none; display: grid; gap: 14px; max-width: 720px; }
-.lista-zasad li { border-left: 4px solid var(--fiolet); padding: 4px 0 4px 18px; }
-.lista-zasad b { color: var(--liliowy); font-size: 1.1rem; }
-.numery-pomocy { margin-top: 36px; background: var(--tlo-jasniejsze); border: 1px solid var(--obramowanie); border-radius: 16px; padding: 20px 24px; max-width: 720px; color: var(--tekst-przygaszony); }
-.numery-pomocy b { color: var(--liliowy); }
-
-.wybor-gier { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-.karta-gry { background: var(--tlo-jasniejsze); border: 2px solid var(--obramowanie); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; transition: border-color .2s, transform .2s; }
-.karta-gry:hover { border-color: var(--fiolet-jasny); transform: translateY(-3px); }
-.karta-gry svg { width: 40px; height: 40px; stroke: var(--fiolet-jasny); margin-bottom: 6px; }
-.karta-gry p { color: var(--tekst-przygaszony); flex: 1; margin-bottom: 12px; }
-.losuj-gre { margin-top: 24px; }
-
-.panel-gry { background: var(--tlo-jasniejsze); border: 2px solid var(--obramowanie); border-radius: 20px; padding: 32px; max-width: 800px; }
-.panel-gry > div > h2 { font-size: 2rem; }
-.panel-gry > div > p { color: var(--tekst-przygaszony); margin: 8px 0 4px; }
-.wroc-do-wyboru { margin-top: 28px; padding: 8px 20px; font-size: .95rem; }
-.numer-pytania { font-weight: 800; color: var(--tekst-przygaszony); margin: 22px 0 10px; }
-.wiadomosc { background: var(--panel); border-radius: 18px 18px 18px 4px; padding: 16px 20px; max-width: 560px; }
-.wiadomosc b { display: block; font-size: .85rem; color: var(--fiolet-jasny); margin-bottom: 4px; }
-.odpowiedzi { display: grid; gap: 12px; margin: 18px 0; max-width: 560px; }
-.odpowiedzi.dwie { grid-template-columns: 1fr 1fr; }
-.odpowiedz { font: 700 1rem Nunito, sans-serif; text-align: left; cursor: pointer; color: var(--tekst); background: var(--panel); border: 2px solid var(--obramowanie); border-radius: 14px; padding: 13px 18px; transition: border-color .2s; }
-.odpowiedz:hover:not(:disabled) { border-color: var(--fiolet-jasny); }
-.odpowiedz:disabled { cursor: default; }
-.odpowiedz.dobra { border-color: var(--dobrze); background: rgba(127, 227, 178, .14); }
-.odpowiedz.zla { border-color: var(--zle); background: rgba(255, 143, 163, .14); }
-.komentarz { min-height: 1.6em; max-width: 560px; margin-bottom: 14px; font-weight: 700; }
-.komentarz.dobrze { color: var(--dobrze); }
-.komentarz.zle { color: var(--zle); }
-.wynik-gry { font: 700 1.7rem Fredoka, sans-serif; color: var(--fiolet-jasny); margin-top: 22px; }
-.pole-hasla { width: 100%; max-width: 560px; margin-top: 20px; font: 700 1.15rem Nunito, sans-serif; color: var(--tekst); background: var(--panel); border: 2px solid var(--obramowanie); border-radius: 14px; padding: 14px 18px; }
-.pole-hasla:focus { outline: none; border-color: var(--fiolet-jasny); }
-.lista-wymagan { list-style: none; margin: 16px 0; display: grid; gap: 4px; color: var(--tekst-przygaszony); }
-.lista-wymagan li::before { content: "✗  "; color: var(--zle); font-weight: 800; }
-.lista-wymagan li.spelnione { color: var(--tekst); }
-.lista-wymagan li.spelnione::before { content: "✓  "; color: var(--dobrze); }
-.czas-lamania { font-weight: 800; color: var(--liliowy); margin: 8px 0 18px; min-height: 1.6em; }
-
-
-.stopka { flex-shrink: 0; margin-top: 40px; padding: 22px 32px; border-top: 1px solid var(--obramowanie); color: var(--tekst-przygaszony); font-size: .9rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.stopka b { color: var(--liliowy); }
-
-@media (max-width: 800px) {
-  .pasek-nawigacji { padding-left: 16px; padding-right: 16px; }
-  .menu-glowne a { padding: 8px 9px; font-size: .85rem; }
-  .logo span { display: none; }
-  .start-naglowek { grid-template-columns: 1fr; gap: 30px; min-height: 0; padding-top: 20px; }
-  .telefon { transform: none; }
-  .panel-gry { padding: 22px; }
-  .odpowiedzi.dwie { grid-template-columns: 1fr; }
-  .stopka { padding: 20px 16px; }
+/* ==========================================================
+   3. PASEK GÓRNY (HUD)
+   ========================================================== */
+#hud{flex:none;display:flex;align-items:center;gap:14px;padding:6px 12px;background:#0d1220;border-bottom:1px solid var(--line);position:relative;z-index:60}
+#hud .clock{font-size:22px;font-weight:700;color:var(--amber);min-width:96px}
+#hud .hp{color:var(--red);letter-spacing:3px;font-size:18px;white-space:nowrap}
+#hud .pr{width:140px;height:6px;background:#1a2132;border-radius:3px;overflow:hidden;flex:none}
+#hud .pr i{display:block;height:100%;width:0;background:var(--cyan)}
+#hud button{background:transparent;border:1px solid var(--line);border-radius:4px;padding:3px 10px;white-space:nowrap}
+#hud button:hover{border-color:var(--cyan)}
+#hud .sp{flex:none;display:flex;gap:8px;margin-left:auto}
+/* komunikaty i błędy (dawniej na dole ekranu komputera) */
+#st{flex:1;min-width:0;height:2.8em;font-size:13px;line-height:1.4;color:var(--dim);overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;align-self:center}
+#st.bad{color:var(--red)}
+#st.good{color:var(--ok)}
+@media (max-width:760px){
+  #hud{flex-wrap:wrap;gap:6px 10px}
+  #hud .pr{flex:1}
+  #st{order:9;flex-basis:100%;height:2.8em}
+  #hud .sp{margin-left:0}
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 
+/* ==========================================================
+   4. POKÓJ (scena 1000×560, skalowana skryptem)
+   ========================================================== */
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;--k:1;
+  background:radial-gradient(ellipse 40% 60% at 80% 40%,#6b4d2233,transparent 70%),linear-gradient(#18203a,#10162a 70%)}
+/* podłoga/biurko rozciągnięte na całą szerokość okna; pozycję ustawia fit() w core.js */
+#floor{position:absolute;left:0;right:0;bottom:0;top:100%;border-top:calc(8px * var(--k)) solid #6a4a35;background:linear-gradient(#4a3426,#2b1e16)}
+#room{position:absolute;left:0;top:0;width:1000px;height:560px;transform-origin:0 0}
+#stage.shake{animation:shake .45s}
+@keyframes shake{0%,100%{translate:0}20%{translate:-8px 3px}40%{translate:7px -4px}60%{translate:-5px 2px}80%{translate:4px -2px}}
+#flash{position:absolute;inset:0;background:#ff1030;opacity:0;pointer-events:none;z-index:50}
+#flash.on{animation:fl .6s}
+@keyframes fl{0%{opacity:.55}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){#stage.shake,#flash.on{animation:none}}
 
-.skrzynka { display: grid; grid-template-columns: 240px 1fr; gap: 18px; margin-top: 14px; }
-.lista-maili { display: grid; gap: 8px; align-content: start; }
-.pozycja-maila { font: 700 .9rem Nunito, sans-serif; text-align: left; cursor: pointer; color: var(--tekst); background: var(--panel); border: 2px solid var(--obramowanie); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; }
-.pozycja-maila span { color: var(--tekst-przygaszony); font-weight: 400; }
-.pozycja-maila.wybrana { border-color: var(--fiolet-jasny); }
-.podglad-maila { background: var(--panel); border-radius: 14px; padding: 20px; }
-.podglad-maila h3 { font-size: 1.25rem; margin-bottom: 6px; }
-.podglad-maila p { margin-bottom: 10px; }
-.adres-nadawcy { color: var(--tekst-przygaszony); font-size: .9rem; word-break: break-all; }
-.link-w-mailu { font: inherit; font-weight: 700; color: var(--fiolet-jasny); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 0; }
-.adres-linku, .podpowiedz-linku { font-size: .9rem; margin-top: 6px; word-break: break-all; }
-.adres-linku { color: var(--liliowy); }
-.podpowiedz-linku { color: var(--tekst-przygaszony); }
-.podglad-maila .przyciski-w-rzedzie { margin-top: 18px; }
-.wskazowki { margin: 6px 0 14px 20px; color: var(--tekst-przygaszony); }
-.mierniki { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 20px 0 6px; }
-.miernik b { font-size: .9rem; color: var(--tekst-przygaszony); }
-.miernik div { height: 8px; margin-top: 4px; background: var(--panel); border-radius: 8px; overflow: hidden; }
-.miernik i { display: block; height: 100%; background: var(--fiolet-jasny); transition: width .4s; }
-.karty-postow { display: grid; gap: 12px; margin: 14px 0; }
-.karta-posta { font: 600 1rem Nunito, sans-serif; text-align: left; cursor: pointer; color: var(--tekst); background: var(--panel); border: 2px solid var(--obramowanie); border-radius: 14px; padding: 14px 18px; display: grid; gap: 4px; }
-.karta-posta:hover:not(:disabled) { border-color: var(--fiolet-jasny); }
-.karta-posta:disabled { cursor: default; }
-.karta-posta.wybrany { border-color: var(--fiolet-jasny); background: rgba(183, 148, 255, .14); }
-.karta-posta small { color: var(--fiolet-jasny); font-weight: 800; }
-.karta-posta .etykieta-posta { color: var(--tekst-przygaszony); font-weight: 600; }
-.czat { display: grid; gap: 10px; max-width: 600px; margin: 18px 0; }
-.dymek { padding: 12px 16px; border-radius: 16px; max-width: 88%; }
-.dymek b { display: block; font-size: .8rem; color: var(--fiolet-jasny); margin-bottom: 2px; }
-.dymek.obcy { background: var(--panel); border-radius: 16px 16px 16px 4px; }
-.dymek.ty { background: var(--fiolet); color: #fff; justify-self: end; border-radius: 16px 16px 4px 16px; }
-.uwaga-czatu { font-size: .93rem; font-weight: 700; padding-left: 12px; border-left: 3px solid; }
-.uwaga-czatu.dobrze { color: var(--dobrze); }
-.uwaga-czatu.zle { color: var(--zle); }
-@media (max-width: 800px) { .skrzynka { grid-template-columns: 1fr; } .mierniki { grid-template-columns: 1fr; } }
+/* dekoracje (zamiast okna): regał i lampka */
+#shelf{position:absolute;left:50px;top:90px;width:170px;height:230px;border:8px solid #3a2a1e;background:#1b1410;
+  display:flex;flex-direction:column;justify-content:space-around;padding:8px 6px}
+#shelf i{display:block;height:46px;border-bottom:6px solid #5a4030;
+  background:repeating-linear-gradient(90deg,#c0504d 0 14px,#1b1410 14px 17px,#4f81bd 17px 31px,#1b1410 31px 34px,#d9a441 34px 46px,#1b1410 46px 49px,#6fae6f 49px 61px,#1b1410 61px 64px)}
+#lamp{position:absolute;left:740px;top:300px;width:6px;height:110px;background:#2b3447}
+#lamp::before{content:"";position:absolute;left:-26px;top:-18px;width:58px;height:30px;background:#ffb454;border-radius:30px 30px 4px 4px;box-shadow:0 0 40px #ffb45488}
+#poster{position:absolute;left:780px;top:80px;width:130px;height:170px;background:#e8dcb8;color:#2a2418;padding:10px;font-size:13px;font-weight:700;transform:rotate(2deg);box-shadow:0 4px 10px #0008}
 
-.spis-lekcji { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
-.spis-lekcji a { color: var(--liliowy); text-decoration: none; font-weight: 700; font-size: .9rem; background: var(--panel); border: 1px solid var(--obramowanie); border-radius: 999px; padding: 6px 14px; }
-.spis-lekcji a:hover { border-color: var(--fiolet-jasny); }
-.lekcje { display: grid; gap: 22px; }
-.lekcja { background: var(--tlo-jasniejsze); border: 2px solid var(--obramowanie); border-radius: 18px; padding: 28px; }
-.lekcja h2 { font-size: 1.7rem; }
-.lekcja .wstep { color: var(--tekst-przygaszony); margin: 8px 0 18px; }
-.lekcja h3 { font-size: 1.05rem; margin-bottom: 8px; }
-.lekcja .zapamietaj { border-left: 4px solid var(--fiolet); background: var(--panel); padding: 12px 16px; border-radius: 0 12px 12px 0; margin: 14px 0 20px; }
-.lekcja .wskazowki { margin-left: 22px; color: var(--tekst); }
-.lekcja .wskazowki li { margin-bottom: 6px; }
-.link-do-lekcji { display: inline-block; margin: 4px 0 8px; color: var(--fiolet-jasny); font-weight: 700; }
-@media (max-width: 480px) { .menu-glowne a { padding: 8px 6px; font-size: .78rem; } .lekcja { padding: 20px; } }
+/* komputer, klawiatura, telefon */
+#mon{position:absolute;left:270px;top:40px;width:460px;height:330px;background:#10141c;border:14px solid #1d2430;border-radius:10px;box-shadow:0 0 50px #5ad1e633}
+#stand{position:absolute;left:460px;top:372px;width:80px;height:34px;background:#1d2430}
+#kb{position:absolute;left:310px;top:430px;width:380px;height:56px;border-radius:6px;background:repeating-linear-gradient(90deg,#222a38 0 22px,#12161f 22px 25px);box-shadow:0 6px 0 #0c0f16}
+#ph{position:absolute;left:800px;top:410px;width:62px;height:104px;background:#0b0d12;border:4px solid #2a3040;border-radius:10px;cursor:pointer;color:#7ff;font:11px/1.3 "Share Tech Mono",monospace;padding:8px 4px;text-align:center;transform:rotate(-6deg)}
+#ph.on{box-shadow:0 0 18px var(--cyan);color:#fff}
 
-.tytul-grupy { font-size: 1.7rem; margin: 34px 0 4px; }
-.tytul-grupy:first-child { margin-top: 0; }
-.opis-grupy { color: var(--tekst-przygaszony); margin-bottom: 18px; max-width: 60ch; }
-.plakietka-rodzaju { display: inline-block; font-weight: 800; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 3px 12px; margin-bottom: 10px; }
-.plakietka-rodzaju.gra { background: var(--fiolet); color: #fff; border: 2px solid var(--fiolet); }
-.plakietka-rodzaju.quiz { background: transparent; color: var(--fiolet-jasny); border: 2px solid var(--fiolet-jasny); }
-.karta-gry { position: relative; }
-.karta-gry .plakietka-rodzaju { position: absolute; top: 18px; right: 18px; margin: 0; }
-.meta-gry { color: var(--fiolet-jasny); font-weight: 700; font-size: .85rem; }
-@media (max-width: 480px) { .menu-glowne { overflow-x: auto; } .menu-glowne a { white-space: nowrap; padding: 8px 5px; font-size: .74rem; } }
+/* ==========================================================
+   5. EKRAN KOMPUTERA (alerty, poczta, zadania)
+   ========================================================== */
+#scr{position:absolute;inset:0;background:#07121b;color:#bfeaf3;font:12px/1.4 "Share Tech Mono",monospace;display:flex;flex-direction:column}
+#scr::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(transparent 0 2px,#0004 2px 3px)}
+#tabs{display:flex;background:#0d2230;border-bottom:1px solid #1d4256}
+#tabs button{flex:1;background:none;border:0;padding:6px;color:var(--dim)}
+#tabs button.on{color:#fff;background:#12384d}
+#views{flex:1;overflow:auto;padding:8px}
+#bdg{color:var(--red)}
 
-.pole-lowcy { position: relative; height: 380px; overflow: hidden; margin-top: 12px; background: var(--panel); border: 2px solid var(--obramowanie); border-radius: 14px; touch-action: manipulation; }
-.pole-lowcy.blad { border-color: var(--zle); }
-.dol-pola { position: absolute; left: 0; right: 0; bottom: 0; height: 36px; display: grid; place-items: center; background: rgba(122, 69, 240, .35); color: var(--liliowy); font-weight: 800; font-size: .85rem; }
-.spadajaca { position: absolute; top: 0; left: 0; width: 200px; text-align: left; cursor: pointer; font: 700 .85rem Nunito, sans-serif; color: var(--tekst); background: var(--tlo-jasniejsze); border: 2px solid var(--fiolet-jasny); border-radius: 12px; padding: 8px 10px; will-change: transform; }
-.ustawienie { margin: 22px 0; }
-.ustawienie > b { color: var(--liliowy); }
-.ustawienie .odpowiedzi { margin: 8px 0; max-width: 100%; }
-.odpowiedz.wybrana-opcja:not(.dobra):not(.zla) { border-color: var(--fiolet-jasny); background: rgba(183, 148, 255, .16); }
+/* alerty */
+.al{border:1px solid #1d4256;padding:6px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.al .n{flex:1}
+.al small{display:block;color:var(--dim)}
+.al.crit{border-color:var(--red)}
+.empty{color:var(--dim)}
+.bar,.pb{height:6px;background:#0d2230;margin-top:4px}
+.bar i,.pb i{display:block;height:100%;width:0;background:var(--cyan)}
+.al.warn .bar i{background:var(--amber)}
+.al.crit .bar i{background:var(--red)}
+
+/* przyciski i pola w zadaniach */
+#scr button.a,#v-task button,.mailb button{background:#12384d;border:1px solid #2b6a88;color:#fff;padding:4px 10px;font:inherit;margin:3px 3px 3px 0;border-radius:2px}
+#v-task button.f,#v-task label.f{display:block;width:100%;text-align:left}
+#v-task label.f{background:#0d2230;padding:4px 8px;margin:3px 0;cursor:pointer}
+#v-task input[type=text],#v-task input:not([type]){background:#0d2230;border:1px solid #2b6a88;color:#fff;padding:4px;font:inherit;width:100%;margin:4px 0}
+#v-task p{color:var(--dim);margin:4px 0}
+#v-task .quote{border-left:3px solid var(--red);padding-left:8px;color:var(--text)}
+
+/* poczta */
+.mail{border-left:3px solid #2b6a88;padding:4px 8px;margin-bottom:8px;background:#0b1c28}
+.mail .fr{color:var(--cyan);word-break:break-all}
