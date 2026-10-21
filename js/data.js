@@ -1,37 +1,45 @@
 'use strict';
 
-/* ==========================================================
-   2. DANE: ZAGROŻENIA, MAILE, LEKCJE
-   ========================================================== */
-// from = od której nocy zagrożenie może się pojawić
-const THREATS = [
-  {id:"brute",    from:1, name:"Atak brute force",       desc:"Ktoś zgaduje Twoje hasło.",
-   tip:"Długie, unikalne hasło i 2FA sprawiają, że zgadywanie hasła nie ma sensu."},
-  {id:"social",   from:1, name:"Za dużo na profilu",     desc:"Na Twoim profilu są wrażliwe posty.",
-   tip:"Dowody, bilety z kodami i informacja „dom stoi pusty” pomagają oszustom i włamywaczom."},
-  {id:"fakenews", from:1, name:"Fałszywa wiadomość",     desc:"Po sieci krąży dezinformacja.",
-   tip:"Szukaj źródła, daty i autora. Sensacyjny ton i „udostępnij zanim usuną” to ostrzeżenie."},
-  {id:"malware",  from:2, name:"Złośliwy plik",          desc:"Pobrał się podejrzany plik.",
-   tip:"Nie otwieraj plików z nieznanych źródeł i uważaj na podwójne rozszerzenia, np. .pdf.exe."},
-  {id:"settings", from:2, name:"Słabe ustawienia konta", desc:"Konto ma otwarte furtki.",
-   tip:"2FA, prywatny profil i wyłączona lokalizacja to szybkie zabezpieczenia."},
-  {id:"wifi",     from:3, name:"Fałszywe Wi‑Fi",         desc:"Ktoś podsłuchuje Twój ruch.",
-   tip:"W publicznym Wi‑Fi używaj VPN i łącz się tylko z siecią, którą znasz."},
-  {id:"shop",     from:3, name:"Fałszywy sklep",         desc:"Okazja podejrzanie dobra.",
-   tip:"Sprawdź adres, dane firmy i sposób płatności. Cena „za dobra” zwykle znaczy oszustwo."},
-  {id:"keylog",   from:4, name:"Keylogger",              desc:"Program zapisuje Twoje klawisze.",
-   tip:"Aktualizacje łatają luki, przez które wchodzą szpiegujące programy."},
-  {id:"bully",    from:4, name:"Hejt w sieci",           desc:"Ktoś Cię wyzywa na czacie.",
-   tip:"Nie odpisuj hejterowi. Zachowaj dowody, zablokuj, zgłoś i powiedz zaufanej osobie."},
-  {id:"leak",     from:5, name:"Wyciek hasła",           desc:"Twoje hasło jest w sieci.",
-   tip:"Po wycieku zmień hasło wszędzie, gdzie go używałeś. Każde konto powinno mieć inne."},
-  {id:"stranger", from:5, name:"Obcy na czacie",         desc:"Nieznajomy dopytuje o Ciebie.",
-   tip:"Nie podawaj obcym danych ani zdjęć. Gdy ktoś każe trzymać rozmowę w tajemnicy, powiedz dorosłemu."},
-  {id:"gamescam", from:5, name:"Oszustwo w grze",        desc:"Ktoś proponuje „super wymianę”.",
-   tip:"Wymieniaj przedmioty tylko oficjalnymi narzędziami gry. „Ty pierwszy” to klasyczny przekręt."}
+const ZAGROZENIA = [
+  {id:"zgadywanie", from:1, nazwa:"Atak brute force", opis:"Ktoś zgaduje Twoje hasło.",
+   porada:"Długie, unikalne hasło i 2FA sprawiają, że zgadywanie hasła nie ma sensu."},
+  {id:"profil", from:1, nazwa:"Za dużo na profilu", opis:"Na Twoim profilu są wrażliwe posty.",
+   porada:"Dowody, bilety z kodami i informacja „dom stoi pusty” pomagają oszustom i włamywaczom."},
+  {id:"dezinformacja", from:1, nazwa:"Fałszywa wiadomość", opis:"Po sieci krąży dezinformacja.",
+   porada:"Szukaj źródła, daty i autora. Sensacyjny ton i „udostępnij zanim usuną” to ostrzeżenie."},
+  {id:"zlosliwyPlik", from:2, nazwa:"Złośliwy plik", opis:"Pobrał się podejrzany plik.",
+   porada:"Nie otwieraj plików z nieznanych źródeł i uważaj na podwójne rozszerzenia, np. .pdf.exe."},
+  {id:"ustawienia", from:2, nazwa:"Słabe ustawienia konta", opis:"Konto ma otwarte furtki.",
+   porada:"2FA, prywatny profil i wyłączona lokalizacja to szybkie zabezpieczenia."},
+  {id:"wifi", from:3, nazwa:"Fałszywe Wi‑Fi", opis:"Ktoś podsłuchuje Twój ruch.",
+   porada:"W publicznym Wi‑Fi używaj VPN i łącz się tylko z siecią, którą znasz."},
+  {id:"sklep", from:3, nazwa:"Fałszywy sklep", opis:"Okazja podejrzanie dobra.",
+   porada:"Sprawdź adres, dane firmy i sposób płatności. Cena „za dobra” zwykle znaczy oszustwo."},
+  {id:"hasla", from:2, nazwa:"Atak słownikowy", opis:"Ktoś testuje popularne hasła.",
+   porada:"Dobre hasło jest długie i nieoczywiste. Kilka losowych słów wygrywa z imieniem i datą urodzenia."},
+  {id:"linki", from:2, nazwa:"Podejrzany link", opis:"Ktoś podsuwa Ci link do „logowania”.",
+   porada:"Sprawdź domenę: liczy się to, co stoi tuż przed pierwszym ukośnikiem. Podróbki mają literówki i dziwne końcówki."},
+  {id:"telefon", from:3, nazwa:"Podejrzany telefon", opis:"Ktoś dzwoni i każe się spieszyć.",
+   porada:"Bank, policja ani kurier nie proszą o kody i przelewy. Rozłącz się i oddzwoń na numer, który znasz."},
+  {id:"kod", from:3, nazwa:"Podejrzany kod QR", opis:"Kod QR prowadzi w dziwne miejsce.",
+   porada:"Kod QR to po prostu link. Nie loguj się ani nie płać przez kody z plakatów, naklejek i SMS-ów."},
+  {id:"keylogger", from:4, nazwa:"Keylogger", opis:"Program zapisuje Twoje klawisze.",
+   porada:"Aktualizacje łatają luki, przez które wchodzą szpiegujące programy."},
+  {id:"aplikacja", from:4, nazwa:"Fałszywa aplikacja", opis:"Do pobrania jest „lepsza wersja”.",
+   porada:"Pobieraj aplikacje tylko z oficjalnego sklepu, sprawdzaj wydawcę i liczbę pobrań. „Odblokowane” wersje często kradną dane."},
+  {id:"uprawnienia", from:4, nazwa:"Za dużo uprawnień", opis:"Aplikacja prosi o zbyt wiele.",
+   porada:"Aplikacja ma dostać tylko to, czego potrzebuje do pracy. Latarka nie potrzebuje kontaktów."},
+  {id:"hejt", from:4, nazwa:"Hejt w sieci", opis:"Ktoś Cię wyzywa na czacie.",
+   porada:"Nie odpisuj hejterowi. Zachowaj dowody, zablokuj, zgłoś i powiedz zaufanej osobie."},
+  {id:"wyciek", from:5, nazwa:"Wyciek hasła", opis:"Twoje hasło jest w sieci.",
+   porada:"Po wycieku zmień hasło wszędzie, gdzie go używałeś. Każde konto powinno mieć inne."},
+  {id:"obcy", from:5, nazwa:"Obcy na czacie", opis:"Nieznajomy dopytuje o Ciebie.",
+   porada:"Nie podawaj obcym danych ani zdjęć. Gdy ktoś każe trzymać rozmowę w tajemnicy, powiedz dorosłemu."},
+  {id:"oszustwoWGrze", from:5, nazwa:"Oszustwo w grze", opis:"Ktoś proponuje „super wymianę”.",
+   porada:"Wymieniaj przedmioty tylko oficjalnymi narzędziami gry. „Ty pierwszy” to klasyczny przekręt."}
 ];
 
-const MAILS = [
+const MAILE = [
   {from:"security@paypa1-support.com", s:"PILNE: konto zostanie zablokowane", b:"Kliknij w ciągu 24h: paypa1-login.xyz/verify", p:1,
    t:"Literówka w domenie (paypa1) i presja czasu to klasyczny phishing."},
   {from:"kurier@dhl-paczka.top", s:"Dopłata 1,99 zł do paczki", b:"Podaj dane karty, aby odebrać przesyłkę.", p:1,
@@ -54,14 +62,52 @@ const MAILS = [
   {from:"newsletter@biblioteka.pl", s:"Nowe książki w bibliotece", b:"Zobacz nowości na stronie biblioteki.", p:0,
    t:"Wiadomość, którą sam zamówiłeś, bez żadnej prośby o dane."},
   {from:"kolega.z.klasy", s:"Masz notatki z biologii?", b:"Wyślij mi je wieczorem, dzięki!", p:0,
-   t:"Znana osoba i zwykła prośba."}
+   t:"Znana osoba i zwykła prośba."},
+
+  {from:"akademia@microsoft-konto.support", s:"Twoje hasło wygasa dziś", b:"Kliknij, żeby je zachować: ms-haslo.top/odnow", p:1,
+   t:"Prawdziwa firma nie straszy wygasaniem hasła z linkiem do obcej domeny."},
+  {from:"faktura@orange-rachunek.biz", s:"Zaległa faktura 214,90 zł", b:"Pobierz fakturę: faktura_214.pdf.exe", p:1,
+   t:"Plik z końcówką .exe to program, a nie faktura."},
+  {from:"info@allegro-bezpieczne.xyz", s:"Zwrot pieniędzy czeka", b:"Podaj numer karty i kod CVV, żeby odebrać zwrot.", p:1,
+   t:"Do zwrotu nie podaje się numeru karty ani kodu CVV."},
+  {from:"ekipa@roblox-darmowe-robux.com", s:"Odbierz 10 000 Robux", b:"Wpisz login i hasło na naszej stronie.", p:1,
+   t:"Darmowa waluta za login i hasło to kradzież konta."},
+  {from:"wsparcie@poczta-ucznia.com.pl.verify-login.net", s:"Skrzynka pełna! Zaloguj się w 2h", b:"Inaczej konto zostanie usunięte.", p:1,
+   t:"Prawdziwą domeną jest ostatni człon przed końcówką: tu verify-login.net."},
+  {from:"koleżanka.ola@gmail.com", s:"Zobacz, co o Tobie napisali!", b:"Kliknij: pokaz-zdjecie.top/ola", p:1,
+   t:"Znajomy z dziwnym linkiem i ciekawostką: jego konto mogło zostać przejęte."},
+  {from:"rekrutacja@praca-dla-uczniow.pl", s:"300 zł dziennie dla uczniów", b:"Wyślij skan dowodu na ten adres, a zaczniesz od jutra.", p:1,
+   t:"Oferta „za dobra” i prośba o skan dowodu to znak oszustwa."},
+  {from:"zwrot@urzad-skarbowy-zwrot.top", s:"Zwrot podatku 1 240 zł", b:"Podaj dane karty, aby otrzymać przelew.", p:1,
+   t:"Urząd nie wypłaca zwrotu na dane karty podane w mailu."},
+
+  {from:"no-reply@spotify.com", s:"Twoje podsumowanie miesiąca", b:"Zobacz najczęściej słuchanych wykonawców. Nie prosimy o hasło.", p:0,
+   t:"Zwykłe podsumowanie bez prośby o dane."},
+  {from:"sekretariat@szkola.pl", s:"Zmiana planu lekcji w czwartek", b:"Lekcja 3 odbędzie się w sali 12.", p:0,
+   t:"Znany nadawca, zwykła informacja."},
+  {from:"tata", s:"Odbiorę Cię o 16:00", b:"Czekaj pod szkołą.", p:0, t:"To po prostu tata."},
+  {from:"no-reply@google.com", s:"Alert bezpieczeństwa: nowe logowanie", b:"Jeśli to Ty, zignoruj. Hasło zmienisz tylko w ustawieniach konta, bez linków.", p:0,
+   t:"Oficjalny nadawca, brak linków i presji."},
+  {from:"klub@sport.pl", s:"Trening przeniesiony na sobotę", b:"Zbiórka o 10:00 na hali.", p:0, t:"Znany klub i zwykła wiadomość."},
+  {from:"babcia", s:"Urodziny w niedzielę", b:"Przyjdź na obiad, upiekłam sernik.", p:0, t:"To po prostu babcia."},
+  {from:"zespol@duolingo.com", s:"Nie zapomnij o lekcji", b:"Twoja seria trwa już 12 dni.", p:0,
+   t:"Przypomnienie z aplikacji, którą sam zainstalowałeś, bez próśb o dane."},
+  {from:"kolega.z.klasy", s:"Zrobiłeś zadanie z matmy?", b:"Sprawdź, czy mamy takie same wyniki.", p:0, t:"Znana osoba i zwykła prośba."}
 ];
 
-// lekcja po każdej przetrwanej nocy
-const LESSONS = [
-  "Noc 1: silne hasło, 2FA i czujność wobec maili. Phishing zdradza dziwna domena, pośpiech i prośba o dane. Uważaj też, co publikujesz i czemu wierzysz.",
-  "Noc 2: pliki z niepewnych źródeł mogą być wirusem, a dobre ustawienia konta zamykają wiele furtek.",
-  "Noc 3: publiczne Wi‑Fi bywa pułapką, a sklep z cudowną ceną bywa pułapką jeszcze bardziej.",
-  "Noc 4: aktualizacje to łatki na dziury. Z hejterem nie rozmawiasz, tylko zbierasz dowody i zgłaszasz.",
-  "Noc 5: wycieki się zdarzają, więc inne hasło do każdego konta ogranicza szkody. Nieznajomym nie mówisz nic o sobie."
+const LEKCJE = [
+  "Dzień 1: silne hasło, 2FA i czujność wobec maili. Phishing zdradza dziwna domena, pośpiech i prośba o dane. Uważaj też, co publikujesz i czemu wierzysz.",
+  "Dzień 2: pliki z niepewnych źródeł mogą być wirusem, dobre ustawienia konta zamykają furtki, a długie hasło i uważne czytanie adresów chronią przed oszustami.",
+  "Dzień 3: publiczne Wi‑Fi bywa pułapką, sklep z cudowną ceną też. Bank, policja i kurier nie proszą o kody, a kod QR to tylko link, który trzeba sprawdzić.",
+  "Dzień 4: aktualizacje to łatki na dziury, aplikacje pobieramy z oficjalnego sklepu i dajemy im tylko potrzebne uprawnienia. Z hejterem nie rozmawiasz, tylko zbierasz dowody i zgłaszasz.",
+  "Dzień 5: wycieki się zdarzają, więc inne hasło do każdego konta ogranicza szkody. Nieznajomym nie mówisz nic o sobie, a „nie mów rodzicom” to sygnał alarmowy."
+];
+
+const KARTECZKI = [
+  {tekst: "Hasło to nie imię psa ani 123456.", x: 780, y: 80, kat: 2, kolor: "kremowa"},
+  {tekst: "Phishing: dziwna domena i pośpiech.", x: 30, y: 8, kat: -3, kolor: "zolta"},
+  {tekst: "Kod 2FA zobaczysz na telefonie.", x: 35, y: 335, kat: 3, kolor: "rozowa"},
+  {tekst: "Zadanie zatrzymuje alert.", x: 752, y: 10, kat: 3, kolor: "zielona"},
+  {tekst: "Fałszywka? Brak źródła i krzykliwy ton.", x: 855, y: 285, kat: -2, kolor: "niebieska"},
+  {tekst: "Zawsze sprawdzaj koniec adresu. Liczy się to, co jest po ostatniej kropce, a nie nazwa firmy na początku.", x: 35, y: 428, kat: -4, kolor: "zolta"}
 ];

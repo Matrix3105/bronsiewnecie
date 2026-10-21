@@ -1,7 +1,7 @@
 :root{
   color-scheme:dark;
-  --bg:#0b0e15; --line:#26324a; --text:#dfe6f2; --dim:#7f8ca3;
-  --amber:#ffb454; --cyan:#5ad1e6; --red:#ff4d5e; --ok:#6fe3a1;
+  --tlo:#0b0e15; --linia:#26324a; --tekst:#dfe6f2; --przygaszony:#7f8ca3;
+  --bursztyn:#ffb454; --cyjan:#5ad1e6; --czerwony:#ff4d5e; --zielony:#6fe3a1;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -9,39 +9,44 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
 html,body{height:100%;margin:0;overflow:hidden}
-body{background:#10162a;color:var(--text);font:15px/1.5 "Chakra Petch",system-ui,sans-serif}
+body{background:#10162a;color:var(--tekst);font:15px/1.5 "Chakra Petch",system-ui,sans-serif}
 button{font:inherit;color:inherit;cursor:pointer}
 .screen{display:none}
 .screen.on{display:block;height:100%;overflow:auto}
+#s-start,#s-msg,#s-intro,#s-wybor{position:fixed;inset:0;z-index:200;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  background:radial-gradient(ellipse at 50% 45%,#070b1694 0%,#070b1678 100%)}
+body.menu #obroc{display:none!important}
+#s-game{position:relative}
 #s-game.on{display:flex;flex-direction:column;overflow:hidden}
 
-/* ==========================================================
-   2. EKRANY: START / WYNIK
-   ========================================================== */
-.center{max-width:580px;margin:8vh auto 0;padding:16px}
+.center{max-width:580px;margin:8vh auto 16px;padding:22px 26px;border:1px solid #ffffff1f;border-radius:14px;
+  background:#090d1a99;box-shadow:0 12px 40px #0008;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
 .center h1{font-size:44px;line-height:1.05;margin:0 0 14px}
-.center p{color:var(--dim);margin:0 0 12px}
-.center ul{color:var(--dim);margin:0 0 14px;padding-left:20px}
-.lesson{border-left:3px solid var(--amber);padding-left:12px;color:var(--text)!important}
-.btn{background:var(--amber);color:#1a1205;border:0;border-radius:4px;padding:10px 18px;font-weight:700;margin:8px 8px 0 0}
-.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.center p{color:#a4b1c8;margin:0 0 12px}
+.center ul{color:#a4b1c8;margin:0 0 14px;padding-left:20px}
+.lesson{border-left:3px solid var(--bursztyn);padding-left:12px;color:var(--tekst)!important}
+.btn{background:var(--bursztyn);color:#1a1205;border:0;border-radius:4px;padding:10px 18px;font-weight:700;margin:8px 8px 0 0}
+.btn.ghost{background:transparent;color:var(--tekst);border:1px solid var(--linia)}
 
-/* ==========================================================
-   3. PASEK GÓRNY (HUD)
-   ========================================================== */
-#hud{flex:none;display:flex;align-items:center;gap:14px;padding:6px 12px;background:#0d1220;border-bottom:1px solid var(--line);position:relative;z-index:60}
-#hud .clock{font-size:22px;font-weight:700;color:var(--amber);min-width:96px}
-#hud .hp{color:var(--red);letter-spacing:3px;font-size:18px;white-space:nowrap}
+#hud{flex:none;display:flex;align-items:center;gap:14px;padding:6px 12px;background:#0d1220;border-bottom:1px solid var(--linia);position:relative;z-index:60}
+#hud .clock{font-size:22px;font-weight:700;color:var(--bursztyn);min-width:112px}
+#hud .hp{white-space:nowrap;font-size:22px;line-height:1;display:flex;gap:3px}
+.h{color:var(--czerwony);text-shadow:0 0 8px #ff4d5e88}
+.h.off{color:#3b2a34;text-shadow:none}
+.h.lost{animation:pekl .6s}
+@keyframes pekl{0%{transform:scale(1.7);color:#fff}100%{transform:scale(1)}}
+#hud .sc{color:var(--bursztyn);font-weight:700;white-space:nowrap}
+.ik{display:none}
 #hud .pr{width:140px;height:6px;background:#1a2132;border-radius:3px;overflow:hidden;flex:none}
-#hud .pr i{display:block;height:100%;width:0;background:var(--cyan)}
-#hud button{background:transparent;border:1px solid var(--line);border-radius:4px;padding:3px 10px;white-space:nowrap}
-#hud button:hover{border-color:var(--cyan)}
+#hud .pr i{display:block;height:100%;width:0;background:var(--cyjan)}
+#hud button{background:transparent;border:1px solid var(--linia);border-radius:4px;padding:3px 10px;white-space:nowrap}
+#hud button:hover{border-color:var(--cyjan)}
 #hud .sp{flex:none;display:flex;gap:8px;margin-left:auto}
-/* komunikaty i błędy (dawniej na dole ekranu komputera) */
-#st{flex:1;min-width:0;height:2.8em;font-size:13px;line-height:1.4;color:var(--dim);overflow:hidden;
+
+#st{flex:1;min-width:0;height:2.8em;font-size:13px;line-height:1.4;color:var(--przygaszony);overflow:hidden;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;align-self:center}
-#st.bad{color:var(--red)}
-#st.good{color:var(--ok)}
+#st.bad{color:var(--czerwony)}
+#st.good{color:var(--zielony)}
 @media (max-width:760px){
   #hud{flex-wrap:wrap;gap:6px 10px}
   #hud .pr{flex:1}
@@ -49,13 +54,10 @@ button{font:inherit;color:inherit;cursor:pointer}
   #hud .sp{margin-left:0}
 }
 
-/* ==========================================================
-   4. POKÓJ (scena 1000×560, skalowana skryptem)
-   ========================================================== */
-#stage{flex:1;min-height:0;position:relative;overflow:hidden;--k:1;
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;--skala:1;
   background:radial-gradient(ellipse 40% 60% at 80% 40%,#6b4d2233,transparent 70%),linear-gradient(#18203a,#10162a 70%)}
-/* podłoga/biurko rozciągnięte na całą szerokość okna; pozycję ustawia fit() w core.js */
-#floor{position:absolute;left:0;right:0;bottom:0;top:100%;border-top:calc(8px * var(--k)) solid #6a4a35;background:linear-gradient(#4a3426,#2b1e16)}
+
+#floor{position:absolute;left:0;right:0;bottom:0;top:100%;border-top:calc(8px * var(--skala)) solid #6a4a35;background:linear-gradient(#4a3426,#2b1e16)}
 #room{position:absolute;left:0;top:0;width:1000px;height:560px;transform-origin:0 0}
 #stage.shake{animation:shake .45s}
 @keyframes shake{0%,100%{translate:0}20%{translate:-8px 3px}40%{translate:7px -4px}60%{translate:-5px 2px}80%{translate:4px -2px}}
@@ -64,52 +66,126 @@ button{font:inherit;color:inherit;cursor:pointer}
 @keyframes fl{0%{opacity:.55}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){#stage.shake,#flash.on{animation:none}}
 
-/* dekoracje (zamiast okna): regał i lampka */
 #shelf{position:absolute;left:50px;top:90px;width:170px;height:230px;border:8px solid #3a2a1e;background:#1b1410;
   display:flex;flex-direction:column;justify-content:space-around;padding:8px 6px}
 #shelf i{display:block;height:46px;border-bottom:6px solid #5a4030;
   background:repeating-linear-gradient(90deg,#c0504d 0 14px,#1b1410 14px 17px,#4f81bd 17px 31px,#1b1410 31px 34px,#d9a441 34px 46px,#1b1410 46px 49px,#6fae6f 49px 61px,#1b1410 61px 64px)}
 #lamp{position:absolute;left:740px;top:300px;width:6px;height:110px;background:#2b3447}
 #lamp::before{content:"";position:absolute;left:-26px;top:-18px;width:58px;height:30px;background:#ffb454;border-radius:30px 30px 4px 4px;box-shadow:0 0 40px #ffb45488}
-#poster{position:absolute;left:780px;top:80px;width:130px;height:170px;background:#e8dcb8;color:#2a2418;padding:10px;font-size:13px;font-weight:700;transform:rotate(2deg);box-shadow:0 4px 10px #0008}
 
-/* komputer, klawiatura, telefon */
 #mon{position:absolute;left:270px;top:40px;width:460px;height:330px;background:#10141c;border:14px solid #1d2430;border-radius:10px;box-shadow:0 0 50px #5ad1e633}
 #stand{position:absolute;left:460px;top:372px;width:80px;height:34px;background:#1d2430}
 #kb{position:absolute;left:310px;top:430px;width:380px;height:56px;border-radius:6px;background:repeating-linear-gradient(90deg,#222a38 0 22px,#12161f 22px 25px);box-shadow:0 6px 0 #0c0f16}
 #ph{position:absolute;left:800px;top:410px;width:62px;height:104px;background:#0b0d12;border:4px solid #2a3040;border-radius:10px;cursor:pointer;color:#7ff;font:11px/1.3 "Share Tech Mono",monospace;padding:8px 4px;text-align:center;transform:rotate(-6deg)}
-#ph.on{box-shadow:0 0 18px var(--cyan);color:#fff}
+#ph.on{box-shadow:0 0 18px var(--cyjan);color:#fff}
 
-/* ==========================================================
-   5. EKRAN KOMPUTERA (alerty, poczta, zadania)
-   ========================================================== */
 #scr{position:absolute;inset:0;background:#07121b;color:#bfeaf3;font:12px/1.4 "Share Tech Mono",monospace;display:flex;flex-direction:column}
 #scr::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(transparent 0 2px,#0004 2px 3px)}
 #tabs{display:flex;background:#0d2230;border-bottom:1px solid #1d4256}
-#tabs button{flex:1;background:none;border:0;padding:6px;color:var(--dim)}
+#tabs button{flex:1;background:none;border:0;padding:6px;color:var(--przygaszony)}
 #tabs button.on{color:#fff;background:#12384d}
 #views{flex:1;overflow:auto;padding:8px}
-#bdg{color:var(--red)}
+#bdg{color:var(--czerwony)}
 
-/* alerty */
 .al{border:1px solid #1d4256;padding:6px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
 .al .n{flex:1}
-.al small{display:block;color:var(--dim)}
-.al.crit{border-color:var(--red)}
-.empty{color:var(--dim)}
+.al small{display:block;color:var(--przygaszony)}
+.al.crit{border-color:var(--czerwony)}
+.empty{color:var(--przygaszony)}
 .bar,.pb{height:6px;background:#0d2230;margin-top:4px}
-.bar i,.pb i{display:block;height:100%;width:0;background:var(--cyan)}
-.al.warn .bar i{background:var(--amber)}
-.al.crit .bar i{background:var(--red)}
+.bar i,.pb i{display:block;height:100%;width:0;background:var(--cyjan)}
+.al.warn .bar i{background:var(--bursztyn)}
+.al.crit .bar i{background:var(--czerwony)}
 
-/* przyciski i pola w zadaniach */
 #scr button.a,#v-task button,.mailb button{background:#12384d;border:1px solid #2b6a88;color:#fff;padding:4px 10px;font:inherit;margin:3px 3px 3px 0;border-radius:2px}
 #v-task button.f,#v-task label.f{display:block;width:100%;text-align:left}
 #v-task label.f{background:#0d2230;padding:4px 8px;margin:3px 0;cursor:pointer}
 #v-task input[type=text],#v-task input:not([type]){background:#0d2230;border:1px solid #2b6a88;color:#fff;padding:4px;font:inherit;width:100%;margin:4px 0}
-#v-task p{color:var(--dim);margin:4px 0}
-#v-task .quote{border-left:3px solid var(--red);padding-left:8px;color:var(--text)}
+#v-task p{color:var(--przygaszony);margin:4px 0}
+#v-task .quote{border-left:3px solid var(--czerwony);padding-left:8px;color:var(--tekst)}
 
-/* poczta */
 .mail{border-left:3px solid #2b6a88;padding:4px 8px;margin-bottom:8px;background:#0b1c28}
-.mail .fr{color:var(--cyan);word-break:break-all}
+.mail .fr{color:var(--cyjan);word-break:break-all}
+.karteczka{position:absolute;padding:10px;font-size:13px;font-weight:700;line-height:1.3;color:#2a2418;box-shadow:0 4px 10px #0008;pointer-events:none;z-index:5}
+.karteczka::before{content:"";position:absolute;top:-6px;left:50%;width:34px;height:12px;margin-left:-17px;background:#ffffff55}
+.karteczka.zolta{background:#f2e27a}
+.karteczka.rozowa{background:#f0a9bd}
+.karteczka.zielona{background:#a8dca0}
+.karteczka.niebieska{background:#9fc9ee}
+.karteczka.kremowa{background:#e8dcb8}
+
+/* wyniki */
+.tabela{margin:14px 0 0;color:var(--przygaszony);font:13px/1.6 "Share Tech Mono",monospace}
+.tabela:empty{display:none}
+.tabela b{color:var(--tekst);display:block;margin-bottom:2px}
+.tabela .wiersz.ja{color:var(--bursztyn)}
+
+/* telefon w pionie: prośba o obrót */
+#obroc{display:none;position:absolute;inset:0;z-index:100;background:#0b0e15f2;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px}
+#obroc .tel{font-size:56px;animation:obrot 2.4s ease-in-out infinite}
+#obroc p{color:var(--przygaszony);margin:6px 0 10px}
+@keyframes obrot{0%,20%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+body.pion #s-game.on #obroc{display:flex}
+@media (prefers-reduced-motion:reduce){#obroc .tel,.h.lost{animation:none}}
+
+/* telefon / niski ekran: bez pokoju, monitor na cały ekran, telefon obok */
+body.kompakt #hud{gap:4px 8px;padding:4px 8px;flex-wrap:wrap}
+body.kompakt #hud .clock{font-size:16px;min-width:0}
+body.kompakt #hud .hp{font-size:18px}
+body.kompakt #hud .pr{width:60px;flex:none}
+body.kompakt #hud button{padding:2px 8px}
+body.kompakt .ik{display:inline}
+body.kompakt .tx{display:none}
+body.kompakt #nl{font-size:13px}
+body.kompakt #st{order:0;flex:1 1 140px;flex-basis:140px;height:2.8em;font-size:11px}
+body.kompakt #hud .sp{margin-left:0}
+body.kompakt #floor,body.kompakt #shelf,body.kompakt #lamp,body.kompakt #stand,body.kompakt #kb,body.kompakt .karteczka{display:none}
+body.kompakt #room{width:100%!important;height:100%!important;transform:none!important;display:flex;gap:10px;padding:6px 8px;align-items:stretch}
+body.kompakt #mon{position:static;flex:1;min-width:0;height:auto;border-width:6px;border-radius:8px}
+body.kompakt #scr{font-size:13px}
+body.kompakt #ph{position:static;flex:none;width:78px;height:auto;align-self:center;padding:10px 4px;font-size:12px;transform:none;min-height:120px;display:flex;align-items:center;justify-content:center}
+body.kompakt #v-task button.f,body.kompakt .mailb button,body.kompakt #scr button.a{padding:7px 12px}
+body.kompakt .center{margin-top:2vh}
+body.kompakt .center h1{font-size:26px;margin-bottom:8px}
+body.kompakt .center{padding:12px 18px;margin-bottom:8px}
+body.kompakt .center p,body.kompakt .center ul{font-size:13px;line-height:1.4;margin-bottom:8px}
+body.kompakt .btn{padding:7px 14px;margin-top:4px}
+
+/* dzień i noc */
+#stage.dzien{background:radial-gradient(ellipse 50% 70% at 20% 20%,#ffe8a844,transparent 70%),linear-gradient(#5d83b8,#35527f 70%)}
+#stage.dzien #lamp::before{box-shadow:none;background:#c9a15f}
+#stage.dzien #mon{box-shadow:0 0 30px #5ad1e622}
+#stage.dzien #room{filter:brightness(1.18) saturate(.95)}
+#stage.noc #room{filter:brightness(.92)}
+#hud .clock{white-space:nowrap}
+body.kompakt #hud .clock{min-width:84px}
+
+.wstep small{display:block;color:var(--bursztyn);letter-spacing:.14em;text-transform:uppercase;font-size:12px;margin-bottom:6px}
+.wstep h1{font-size:34px}
+.wstep p,.wstep .btn{opacity:0;animation:wejdz .8s ease forwards}
+.wstep .btn{margin-top:14px}
+.wstep .pomin{margin-top:10px;color:var(--przygaszony);text-transform:none;letter-spacing:0;font-size:12px}
+.wstep.szybko p,.wstep.szybko .btn{animation-delay:0s!important;animation-duration:.01s}
+@keyframes wejdz{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wstep p,.wstep .btn{animation-duration:.01s;animation-delay:0s!important}}
+#v-task p.fab{color:var(--bursztyn);border-left:3px solid var(--bursztyn);padding-left:8px;font-style:italic}
+body.kompakt .wstep h1{font-size:24px}
+
+/* wybór fabuły */
+.center.wybor{max-width:760px}
+.wybor small{display:block;color:var(--bursztyn);letter-spacing:.14em;text-transform:uppercase;font-size:12px;margin-bottom:6px}
+.wybor h1{font-size:34px}
+#w-lista{display:grid;gap:8px;margin:0 0 6px}
+@media (min-width:700px){#w-lista{grid-template-columns:1fr 1fr}}
+.karta-fab{position:relative;display:flex;flex-direction:column;gap:2px;text-align:left;background:#0d1426;border:1px solid var(--linia);border-radius:10px;padding:10px 12px}
+.karta-fab:hover,.karta-fab:focus-visible{border-color:var(--bursztyn);background:#131c33;outline:none}
+.karta-fab small{margin:0;font-size:11px}
+.karta-fab b{font-size:16px}
+.karta-fab span{color:var(--przygaszony);font-size:13px;line-height:1.35}
+.karta-fab em{font-style:normal;color:var(--cyjan);font-size:12px;margin-top:3px}
+.karta-fab i{position:absolute;top:8px;right:10px;font-style:normal;font-size:11px;color:var(--bursztyn)}
+.karta-fab.ost{border-color:#ffb45466}
+.fab-info{color:var(--przygaszony);font-size:13px;margin:10px 0 0}
+.fab-info:empty{display:none}
+body.kompakt .wybor h1{font-size:24px}
+body.kompakt .wybor>p{display:none}

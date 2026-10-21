@@ -7,36 +7,60 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="menu">
 
-<!-- ========== EKRAN STARTOWY ========== -->
 <section id="s-start" class="screen on">
   <div class="center">
     <h1>Cyber Noc</h1>
-    <p>Jest po północy, siedzisz sam w pokoju. W sieci ktoś próbuje się włamać na Twoje konta. Do 6:00 rano musisz utrzymać zabezpieczenia.</p>
+    <p>Siedzisz sam w pokoju, a w sieci ktoś próbuje się włamać na Twoje konta. Każda doba trwa od 6:00 do 6:00: w dzień jest trochę spokojniej, w nocy hakerzy atakują mocniej. Utrzymaj zabezpieczenia do rana.</p>
     <ul>
       <li><b>Alerty:</b> gdy zagrożenie rośnie, kliknij „Reaguj” i rozwiąż minigrę. Gdy robisz zadanie, zagrożenie przestaje rosnąć.</li>
       <li><b>Poczta:</b> oceń każdy mail: „Zgłoś phishing” albo „Bezpieczny”.</li>
       <li><b>Telefon:</b> dotknij go, żeby zobaczyć kod 2FA.</li>
     </ul>
-    <p>Przetrwaj 5 nocy. Każda przynosi nowe zagrożenia, a po każdej dowiesz się, czego się nauczyłeś.</p>
-    <button class="btn" id="b-new">Zacznij od nocy 1</button>
+    <p>Masz 5 serc. Każda zła odpowiedź i każde włamanie zabiera jedno. Przetrwaj 5 dób, a potem walcz o wynik w trybie nieskończonym.</p>
+    <button class="btn" id="b-resume" style="display:none">Kontynuuj grę</button>
+    <button class="btn" id="b-new">Zacznij od dnia 1</button>
     <button class="btn ghost" id="b-cont" style="display:none">Kontynuuj</button>
+    <div id="rekordy" class="tabela"></div>
+    <p id="fab-info" class="fab-info"></p>
   </div>
 </section>
 
-<!-- ========== EKRAN GRY: pasek na górze + scena na resztę okna ========== -->
-<section id="s-game" class="screen">
+<section id="s-intro" class="screen">
+  <div class="center wstep" id="w-karta">
+    <small id="w-kiedy"></small>
+    <h1 id="w-tytul"></h1>
+    <div id="w-tekst"></div>
+    <button class="btn" id="w-start">Zaczynam</button>
+    <button class="btn ghost" id="w-zmien">Zmień fabułę</button>
+    <small class="pomin">Kliknij kartę, żeby przyspieszyć</small>
+  </div>
+</section>
+
+<section id="s-wybor" class="screen">
+  <div class="center wybor">
+    <small>Nowa gra</small>
+    <h1>Wybierz fabułę</h1>
+    <p>Każda opowiada, jak wpakowałeś się w kłopoty. Fabuła zmienia treść alertów, maile i to, jakie zagrożenia pojawiają się częściej.</p>
+    <div id="w-lista"></div>
+    <button class="btn" id="w-losuj">🎲 Wylosuj fabułę</button>
+    <button class="btn ghost" id="w-wroc">Wróć</button>
+  </div>
+</section>
+
+<section id="s-game" class="screen on">
   <header id="hud">
-    <span id="nl">Noc 1</span>
-    <span class="clock" id="clock">12:00 AM</span>
+    <span id="nl">Dzień 1</span>
+    <span class="clock" id="clock">☀ 06:00</span>
     <div class="pr"><i id="prog"></i></div>
     <span class="hp" id="hp"></span>
+    <span class="sc" id="sc" style="display:none"></span>
     <div id="st"></div>
     <div class="sp">
-      <button id="mute">Dźwięk: wł.</button>
-      <button id="full">Pełny ekran</button>
-      <button id="menu">Menu</button>
+      <button id="mute" title="Dźwięk"><span class="ik">🔊</span><span class="tx">Dźwięk: wł.</span></button>
+      <button id="full" title="Pełny ekran"><span class="ik">⛶</span><span class="tx">Pełny ekran</span></button>
+      <button id="menu" title="Menu"><span class="ik">☰</span><span class="tx">Menu</span></button>
     </div>
   </header>
 
@@ -44,7 +68,6 @@
     <div id="floor"></div>
     <div id="room">
       <div id="shelf"><i></i><i></i><i></i></div>
-      <div id="poster">Hasło to nie imię psa ani 123456.</div>
       <div id="lamp"></div>
       <div id="stand"></div>
       <div id="mon"><div id="scr">
@@ -60,24 +83,28 @@
     </div>
     <div id="flash"></div>
   </main>
+  <div id="obroc"><div class="tel">📱</div><b>Obróć telefon poziomo</b><p>Gra działa w poziomie. Do tego czasu jest wstrzymana.</p><button class="btn" id="b-obroc">Pełny ekran</button></div>
 </section>
 
-<!-- ========== EKRAN WYNIKU ========== -->
 <section id="s-msg" class="screen">
   <div class="center">
     <h1 id="m-title"></h1>
     <p id="m-text"></p>
     <p class="lesson" id="m-lesson"></p>
+    <div class="tabela" id="m-score"></div>
     <button class="btn" id="m-btn"></button>
+    <button class="btn ghost" id="m-btn2" style="display:none"></button>
     <button class="btn ghost" id="m-home">Menu główne</button>
   </div>
 </section>
 
-<!-- kolejność ma znaczenie: pliki współdzielą zmienne globalne -->
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
+<script src="js/przyklady.js"></script>
+<script src="js/karteczki.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/core.js"></script>
+<script src="js/fabula.js"></script>
 <script src="js/threats.js"></script>
 <script src="js/mail.js"></script>
 <script src="js/tasks.js"></script>

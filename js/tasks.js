@@ -1,254 +1,272 @@
 'use strict';
 
-/* ==========================================================
-   9. MINIGRY (ZADANIA NA KOMPUTERZE)
-   Każda: function(pudełko, sukces, porażka(komunikat))
-   ========================================================== */
-
-// elementy wspólne dla minigier
-const ui = {
-  head(b, title, text) { b.append(el("b", "", title), el("p", "", text)); },
-  btn(b, txt, fn, cls) { const x = el("button", cls || "f", txt); x.onclick = fn; b.appendChild(x); return x; },
-  checks(b, items) {
-    return items.map(t => {
-      const l = el("label", "f"), i = document.createElement("input");
+const interfejs = {
+  naglowek(b, tytul, tresc) { b.append(elem("b", "", tytul), elem("p", "", tresc)); },
+  przycisk(b, napis, akcja, klasa) { const x = elem("button", klasa || "f", napis); x.onclick = akcja; b.appendChild(x); return x; },
+  polaWyboru(b, pozycje) {
+    return pozycje.map(t => {
+      const l = elem("label", "f"), i = document.createElement("input");
       i.type = "checkbox"; l.append(i, " " + t); b.appendChild(l); return i;
     });
   },
-  // pasek postępu: usuwa przyciski i po czasie wywołuje cb
-  progress(b, ms, cb) {
-    const d = el("div", "pb"), i = document.createElement("i");
+
+  postep(b, czasMs, poCzasie) {
+    const d = elem("div", "pb"), i = document.createElement("i");
     d.appendChild(i); b.appendChild(d);
     b.querySelectorAll("button,input,label").forEach(x => x.remove());
-    i.style.transition = "width " + ms + "ms linear"; void i.offsetWidth; i.style.width = "100%";
-    later(cb, ms);
+    i.style.transition = "width " + czasMs + "ms linear"; void i.offsetWidth; i.style.width = "100%";
+    pozniej(poCzasie, czasMs);
   },
-  // pytanie z wyborem jednej odpowiedzi: opts = [[tekst, czyDobra], ...]
-  choice(b, opts, ok, no, wrongMsg) {
-    shuffle(opts).forEach(o => ui.btn(b, o[0], () => o[1] ? ok() : no(typeof wrongMsg === "function" ? wrongMsg(o) : wrongMsg)));
+
+  wybor(b, opcje, dobrze, zle, komunikatBledu) {
+    pomieszaj(opcje).forEach(o => interfejs.przycisk(b, o[0], () => o[1] ? dobrze() : zle(typeof komunikatBledu === "function" ? komunikatBledu(o) : komunikatBledu)));
   }
 };
 
-const TASKS = {
+const ZADANIA = {
 
-  // --- Hasło + 2FA: kod z telefonu ---
-  brute(b, ok, no) {
-    S.code = rand6(); S.need = 1;
-    ui.head(b, "Weryfikacja dwuetapowa", "Kod wysłano na telefon. Dotknij telefonu na biurku, odczytaj kod i wpisz go tutaj.");
-    const i = document.createElement("input"); i.maxLength = 6; i.inputMode = "numeric"; i.placeholder = "000000"; i.oninput = SFX.type;
+  zgadywanie(b, dobrze, zle) {
+    const f = fab(), pulapka = Math.random() < (f.pulapka || .35);
+    const [tytul, opis] = pulapka
+      ? ((f.pulapkaTekst && Math.random() < .6) ? f.pulapkaTekst : nastepny("kod2faPulapka", PRZYKLADY.kod2fa.pulapka))
+      : nastepny("kod2faLegit", PRZYKLADY.kod2fa.legit);
+    stan.kod = losujKod(); stan.potrzebny = 1;
+    interfejs.naglowek(b, tytul, opis);
+    const i = document.createElement("input"); i.maxLength = 6; i.inputMode = "numeric"; i.placeholder = "000000"; i.oninput = DZWIEKI.type;
     b.appendChild(i);
-    ui.btn(b, "Zatwierdź", () => {
-      if (i.value === S.code) { S.need = 0; ok(); }
-      else { S.code = rand6(); i.value = ""; no("Zły kod. Wysłano nowy, sprawdź telefon."); }
+    interfejs.przycisk(b, "Zatwierdź kod", () => {
+      if (pulapka) return zle("Podałeś kod, o który poprosił ktoś obcy. Kod 2FA to klucz do konta i zostaje tylko u Ciebie.");
+      if (i.value === stan.kod) { stan.potrzebny = 0; dobrze(); }
+      else { stan.kod = losujKod(); i.value = ""; zle("Zły kod. Wysłano nowy, sprawdź telefon."); }
+    }, "a");
+    interfejs.przycisk(b, "To nie ja, odrzuć", () => {
+      if (pulapka) { stan.potrzebny = 0; dobrze(); }
+      else zle("To Ty się logowałeś, a odrzuciłeś własny kod. Najpierw sprawdź, kto i po co prosi o kod.");
     }, "a");
   },
 
-  // --- Profil: usuń niebezpieczne posty ---
-  social(b, ok, no) {
-    ui.head(b, "Czyszczenie profilu", "Zaznacz posty, które są niebezpieczne, i usuń je. Bezpiecznych nie ruszaj.");
-    const posts = shuffle([
-      ["Zdjęcie dowodu osobistego „dla pamiątki”", 1],
-      ["Selfie z psem", 0],
-      ["„Wyjeżdżamy na 2 tygodnie, dom pusty!” + adres", 1],
-      ["Zdjęcie biletu z widocznym kodem kreskowym", 1],
-      ["Zdjęcie pizzy z kolacji", 0]
+  profil(b, dobrze, zle) {
+    interfejs.naglowek(b, "Czyszczenie profilu", "Zaznacz posty, które są niebezpieczne, i usuń je. Bezpiecznych nie ruszaj.");
+    const p = poz();
+    const zlePosty = wybierz("postyZle", PRZYKLADY.postyZle, 2 + Math.floor(p / 2));
+    if (fab().post) zlePosty[0] = fab().post;
+    const posty = pomieszaj([
+      ...zlePosty.map(t => [t, 1]),
+      ...wybierz("postyDobre", PRZYKLADY.postyDobre, p > 2 ? 3 : 2).map(t => [t, 0])
     ]);
-    const cb = ui.checks(b, posts.map(p => p[0]));
-    ui.btn(b, "Usuń zaznaczone", () => {
-      cb.every((c, i) => c.checked === !!posts[i][1]) ? ok()
-        : no("Usuń dokładnie te posty, które ujawniają dokumenty, kody lub to, że dom jest pusty.");
+    const pola = interfejs.polaWyboru(b, posty.map(x => x[0]));
+    interfejs.przycisk(b, "Usuń zaznaczone", () => {
+      pola.every((c, i) => c.checked === !!posty[i][1]) ? dobrze()
+        : zle("Usuń dokładnie te posty, które ujawniają dokumenty, kody, dane lub to, że dom jest pusty.");
     }, "a");
   },
 
-  // --- Fake news: wskaż fałszywkę ---
-  fakenews(b, ok, no) {
-    const sets = [
-      [["SZOK! Lekarze ukrywają ten trik! Udostępnij, zanim usuną!", 1],
-       ["Ministerstwo: nowe zasady egzaminów od września (komunikat na gov.pl)", 0],
-       ["Agencja prasowa podała dane GUS o inflacji, z linkiem do źródła", 0]],
-      [["Naukowcy z uniwersytetu opublikowali wyniki badań (link do artykułu)", 0],
-       ["Nagranie: ten polityk powiedział TO! Bez źródła i bez daty, ucięte w połowie zdania", 1],
-       ["Prognoza IMGW: w weekend możliwe burze", 0]],
-      [["Rozdają 500 zł każdemu, kto udostępni ten post!", 1],
-       ["Szkoła zmienia godziny lekcji. Informacja na stronie szkoły", 0],
-       ["Burmistrz otworzył plac zabaw (zdjęcia w lokalnej gazecie)", 0]]
+  dezinformacja(b, dobrze, zle) {
+    const opcje = [
+      [(fab().fejk && Math.random() < .5) ? fab().fejk : nastepny("newsyFalszywe", PRZYKLADY.newsyFalszywe), 1],
+      ...wybierz("newsyPrawdziwe", PRZYKLADY.newsyPrawdziwe, poz() > 3 ? 3 : 2).map(t => [t, 0])
     ];
-    ui.head(b, "Weryfikacja newsów", "Który z tych przekazów jest fałszywy? Zablokuj go.");
-    ui.choice(b, pick(sets).map(x => x.slice()), ok, no, "To wiarygodny przekaz. Fałszywka ma sensacyjny ton albo brak źródła.");
+    interfejs.naglowek(b, "Weryfikacja newsów", "Który z tych przekazów jest fałszywy? Zablokuj go.");
+    interfejs.wybor(b, opcje, dobrze, zle, "To wiarygodny przekaz. Fałszywka ma sensacyjny ton, brak źródła albo straszy i każe „udostępnić dalej”.");
   },
 
-  // --- Antywirus: podwójne rozszerzenie ---
-  malware(b, ok, no) {
-    const bad = pick(["faktura.pdf.exe", "zdjecie.jpg.scr", "cv_final.docx.exe"]);
-    ui.head(b, "Antywirus", "Przeskanuj folder Pobrane.");
-    ui.btn(b, "Skanuj", () => {
+  zlosliwyPlik(b, dobrze, zle) {
+    const opcje = [
+      [fab().plik || nastepny("plikiZle", PRZYKLADY.plikiZle), 1],
+      ...wybierz("plikiDobre", PRZYKLADY.plikiDobre, poz() > 3 ? 4 : 3).map(t => [t, 0])
+    ];
+    interfejs.naglowek(b, "Antywirus", "Przeskanuj folder Pobrane.");
+    interfejs.przycisk(b, "Skanuj", () => {
       b.querySelector("p").textContent = "Skanowanie…";
-      ui.progress(b, 2000, () => {
+      interfejs.postep(b, 2000, () => {
         b.innerHTML = "";
-        ui.head(b, "Wykryto podejrzany plik", "Wskaż plik do usunięcia. Nie kasuj dobrych.");
-        ui.choice(b, [[bad, 1], ["raport.docx", 0], ["wakacje.jpg", 0], ["notatki.txt", 0]], ok, no,
-          "To bezpieczny plik. Szukaj podwójnego rozszerzenia.");
+        interfejs.naglowek(b, "Wykryto podejrzany plik", "Wskaż plik do usunięcia. Nie kasuj dobrych.");
+        interfejs.wybor(b, opcje, dobrze, zle, "To bezpieczny plik. Szukaj podwójnego rozszerzenia albo programu (.exe, .scr, .bat, .js) udającego dokument.");
       });
     }, "a");
   },
 
-  // --- Ustawienia konta ---
-  settings(b, ok, no) {
-    ui.head(b, "Ustawienia konta", "Ustaw konto tak, żeby było jak najbezpieczniejsze, i zapisz.");
-    const opts = shuffle([
-      ["Weryfikacja dwuetapowa (2FA)", true, false],
-      ["Profil prywatny", true, false],
-      ["Dodawaj lokalizację do zdjęć", false, true],
-      ["Numer telefonu widoczny dla wszystkich", false, true]
+  ustawienia(b, dobrze, zle) {
+    interfejs.naglowek(b, "Ustawienia konta", "Ustaw konto tak, żeby było jak najbezpieczniejsze, i zapisz.");
+    const ile = poz() <= 2 ? 2 : 3;
+    const opcje = pomieszaj([
+      ...wybierz("ustDobre", PRZYKLADY.ustawienia.filter(o => o[1]), ile),
+      ...wybierz("ustZle", PRZYKLADY.ustawienia.filter(o => !o[1]), ile)
     ]);
-    const cb = ui.checks(b, opts.map(o => o[0]));
-    cb.forEach((c, i) => c.checked = opts[i][2]);      // stan początkowy jest zły
-    ui.btn(b, "Zapisz", () => {
-      const wrong = cb.findIndex((c, i) => c.checked !== opts[i][1]);
-      wrong < 0 ? ok() : no("Popraw ustawienie: „" + opts[wrong][0] + "”.");
+    const pola = interfejs.polaWyboru(b, opcje.map(o => o[0]));
+    pola.forEach((c, i) => c.checked = opcje[i][2]);
+    interfejs.przycisk(b, "Zapisz", () => {
+      const bledny = pola.findIndex((c, i) => c.checked !== opcje[i][1]);
+      bledny < 0 ? dobrze() : zle("Popraw ustawienie: „" + opcje[bledny][0] + "”.");
     }, "a");
   },
 
-  // --- Publiczne Wi-Fi + VPN ---
-  wifi(b, ok, no) {
-    ui.head(b, "Wybierz sieć", "Twój router to „DomWiFi_5G”. Połącz się z nim, potem włącz VPN.");
-    ui.choice(b, [
-      ["DomWiFi_5G (szyfrowana WPA3)", 1], ["Free_Airport_WiFi (otwarta)", 0],
-      ["DomWiFi_5G_Free (otwarta)", 0], ["Kawiarnia_Gosc (hasło na paragonie)", 0]
-    ], () => {
+  wifi(b, dobrze, zle) {
+    const s = nastepny("sieci", PRZYKLADY.sieci);
+    const falszywe = fab().siec ? [fab().siec, ...s.falszywe.slice(1)] : s.falszywe;
+    interfejs.naglowek(b, "Wybierz sieć", "Twój router to „" + s.nazwa + "”. Połącz się z nim, potem włącz VPN.");
+    interfejs.wybor(b, [[s.nazwa + " (szyfrowana WPA3)", 1], ...falszywe.map(f => [f, 0])], () => {
       b.innerHTML = "";
-      ui.head(b, "Połączono z DomWiFi_5G", "Teraz włącz VPN.");
-      ui.btn(b, "Włącz VPN", () => {
+      interfejs.naglowek(b, "Połączono z " + s.nazwa, "Teraz włącz VPN.");
+      interfejs.przycisk(b, "Włącz VPN", () => {
         b.querySelector("p").textContent = "Budowanie szyfrowanego tunelu…";
-        ui.progress(b, 1800, ok);
+        interfejs.postep(b, 1800, dobrze);
       }, "a");
-    }, no, "To nie Twoja sieć. Fałszywe punkty kopiują nazwy.");
+    }, zle, "To nie Twoja sieć. Fałszywe punkty kopiują nazwy albo kuszą darmowym internetem.");
   },
 
-  // --- Sklep internetowy ---
-  shop(b, ok, no) {
-    ui.head(b, "Zakupy online", "Chcesz kupić słuchawki. Który sklep jest bezpieczny?");
-    ui.choice(b, [
-      ["okazja-sklep24.top: słuchawki za 49 zł, płatność tylko przelewem na konto prywatne", 0],
-      ["sklep-elektro.pl (https): dane firmy, regulamin, BLIK i karta, cena zbliżona do rynkowej", 1],
-      ["mega-promocje.xyz: „zostało 3 minuty!”, brak danych firmy i regulaminu", 0]
-    ], ok, no, "Ten sklep ma typowe znaki oszustwa: dziwna domena, presja czasu, brak danych firmy albo przelew na prywatne konto.");
+  sklep(b, dobrze, zle) {
+    const s = nastepny("sklepy", PRZYKLADY.sklepy);
+    interfejs.naglowek(b, "Zakupy online", "Chcesz kupić: " + s.co + ". Który sklep jest bezpieczny?");
+    interfejs.wybor(b, s.opcje, dobrze, zle, "Ten sklep ma typowe znaki oszustwa: dziwna domena, presja czasu, brak danych firmy albo przelew na prywatne konto.");
   },
 
-  // --- Aktualizacje (keylogger) ---
-  keylog(b, ok, no) {
-    ui.head(b, "Aktualizacja systemu", "Szukaj dostępnych łatek.");
-    ui.btn(b, "Szukaj", () => {
+  keylogger(b, dobrze, zle) {
+    const latki = wybierz("latki", PRZYKLADY.latki, poz() > 4 ? 4 : 3);
+    interfejs.naglowek(b, "Aktualizacja systemu", "Szukaj dostępnych łatek.");
+    interfejs.przycisk(b, "Szukaj", () => {
       b.querySelector("p").textContent = "Szukanie…";
-      ui.progress(b, 1500, () => {
+      interfejs.postep(b, 1500, () => {
         b.innerHTML = "";
-        ui.head(b, "Znaleziono łatki", "Zaznacz wszystkie i zainstaluj.");
-        const cb = ui.checks(b, ["Łatka bezpieczeństwa KB402", "Aktualizacja przeglądarki", "Poprawka sterownika klawiatury"]);
-        ui.btn(b, "Instaluj", () => {
-          if (cb.some(i => !i.checked)) return no("Zaznacz wszystkie łatki, inaczej luka zostaje.");
+        interfejs.naglowek(b, "Znaleziono łatki", "Zaznacz wszystkie i zainstaluj.");
+        const pola = interfejs.polaWyboru(b, latki);
+        interfejs.przycisk(b, "Instaluj", () => {
+          if (pola.some(i => !i.checked)) return zle("Zaznacz wszystkie łatki, inaczej luka zostaje.");
           b.innerHTML = "<b>Instalowanie…</b>";
-          ui.progress(b, 1800, () => {
-            b.innerHTML = ""; b.appendChild(el("b", "", "Wymagany restart"));
-            ui.btn(b, "Uruchom ponownie", () => { b.innerHTML = "<b>Restart…</b>"; ui.progress(b, 1200, ok); }, "a");
+          interfejs.postep(b, 1800, () => {
+            b.innerHTML = ""; b.appendChild(elem("b", "", "Wymagany restart"));
+            interfejs.przycisk(b, "Uruchom ponownie", () => { b.innerHTML = "<b>Restart…</b>"; interfejs.postep(b, 1200, dobrze); }, "a");
           });
         }, "a");
       });
     }, "a");
   },
 
-  // --- Cyberprzemoc ---
-  bully(b, ok, no) {
-    ui.head(b, "Hejt na czacie", "Anonimowy użytkownik pisze do Ciebie:");
-    b.appendChild(el("p", "quote", "„Jesteś beznadziejny, nikt Cię nie lubi. Wszyscy się z Ciebie śmieją.”"));
-    b.appendChild(el("p", "", "Zaznacz wszystkie dobre reakcje i zatwierdź."));
-    const acts = shuffle([
-      ["Zrób zrzuty ekranu jako dowód", 1],
-      ["Zablokuj i zgłoś konto", 1],
-      ["Powiedz zaufanej dorosłej osobie", 1],
-      ["Odpisz mu jeszcze ostrzej", 0],
-      ["Usuń wszystko i nikomu nie mów", 0]
+  hejt(b, dobrze, zle) {
+    interfejs.naglowek(b, "Hejt na czacie", "Anonimowy użytkownik pisze do Ciebie:");
+    b.appendChild(elem("p", "quote", nastepny("hejt", PRZYKLADY.hejt)));
+    b.appendChild(elem("p", "", "Zaznacz wszystkie dobre reakcje i zatwierdź."));
+    const akcje = pomieszaj([
+      ...wybierz("reakcjeDobre", PRZYKLADY.reakcjeDobre, 3).map(t => [t, 1]),
+      ...wybierz("reakcjeZle", PRZYKLADY.reakcjeZle, 2).map(t => [t, 0])
     ]);
-    const cb = ui.checks(b, acts.map(a => a[0]));
-    ui.btn(b, "Zatwierdź", () => {
-      cb.every((c, i) => c.checked === !!acts[i][1]) ? ok()
-        : no("Nie odpowiadaj agresją i nie zostawaj z tym sam. Zbierz dowody, zablokuj, zgłoś i powiedz komuś zaufanemu.");
+    const pola = interfejs.polaWyboru(b, akcje.map(a => a[0]));
+    interfejs.przycisk(b, "Zatwierdź", () => {
+      pola.every((c, i) => c.checked === !!akcje[i][1]) ? dobrze()
+        : zle("Nie odpowiadaj agresją i nie zostawaj z tym sam. Zbierz dowody, zablokuj, zgłoś i powiedz komuś zaufanemu.");
     }, "a");
   },
 
-  // --- Wyciek hasła: nowe hasło ---
-  leak(b, ok) {
-    ui.head(b, "Nowe hasło", "Stare hasło wyciekło. Ustal nowe, spełniające wszystkie warunki.");
+  wyciek(b, dobrze) {
+    const dl = losuj([10, 12, 14]);
+    interfejs.naglowek(b, "Nowe hasło", "Stare hasło wyciekło. Ustal nowe, spełniające wszystkie warunki.");
     const i = document.createElement("input"); i.autocomplete = "off"; i.placeholder = "nowe hasło";
-    const r = el("div"), save = ui.btn(b, "Zapisz hasło", ok, "a");
-    b.insertBefore(i, save); b.insertBefore(r, save); save.disabled = true;
-    const RULES = [
-      ["Co najmniej 10 znaków",           v => v.length >= 10],
-      ["Wielka litera",                   v => /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(v)],
-      ["Cyfra",                           v => /\d/.test(v)],
-      ["Znak specjalny",                  v => /[^\p{L}\d]/u.test(v)],
-      ["Bez „haslo”, „123”, „qwerty”",    v => !/haslo|hasło|123|qwerty/i.test(v)]
+    const r = elem("div"), zapisz = interfejs.przycisk(b, "Zapisz hasło", dobrze, "a");
+    b.insertBefore(i, zapisz); b.insertBefore(r, zapisz); zapisz.disabled = true;
+    const WARUNKI = [
+      ["Co najmniej " + dl + " znaków", v => v.length >= dl],
+      ["Wielka litera", v => /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(v)],
+      ["Cyfra", v => /\d/.test(v)],
+      ["Znak specjalny", v => /[^\p{L}\d]/u.test(v)],
+      ["Bez „haslo”, „123”, „qwerty”", v => !/haslo|hasło|123|qwerty/i.test(v)]
     ];
-    const update = () => {
-      let all = true; r.innerHTML = "";
-      RULES.forEach(([txt, test]) => {
-        const good = test(i.value); if (!good) all = false;
-        const row = el("div", "", (good ? "✓ " : "○ ") + txt); row.style.color = good ? "var(--ok)" : "var(--dim)"; r.appendChild(row);
+    const aktualizuj = () => {
+      let wszystkie = true; r.innerHTML = "";
+      WARUNKI.forEach(([napis, test]) => {
+        const dobry = test(i.value); if (!dobry) wszystkie = false;
+        const wiersz = elem("div", "", (dobry ? "✓ " : "○ ") + napis); wiersz.style.color = dobry ? "var(--zielony)" : "var(--przygaszony)"; r.appendChild(wiersz);
       });
-      save.disabled = !all; SFX.type();
+      zapisz.disabled = !wszystkie; DZWIEKI.type();
     };
-    i.oninput = update;
+    i.oninput = aktualizuj; aktualizuj();
   },
 
-  // --- Obcy na czacie: rozmowa w dwóch krokach ---
-  stranger(b, ok, no) {
-    const step2 = () => {
+  obcy(b, dobrze, zle) {
+    const o = nastepny("obcy", PRZYKLADY.obcy), kto = fab().nick || o.kto;
+    const krok2 = () => {
       b.innerHTML = "";
-      ui.head(b, "Czat: ProGamer_99", "Nieznajomy pisze dalej:");
-      b.appendChild(el("p", "quote", "„Okej. To dodaj mnie na komunikator i wyślij fotkę. Tylko nie mów rodzicom, to nasza tajemnica.”"));
-      ui.choice(b, [
-        ["Wyślę zdjęcie, skoro prosi", 0],
-        ["Blokuję, zgłaszam i mówię dorosłemu", 1],
-        ["Wyślę zdjęcie bez twarzy", 0]
-      ], ok, no, "Nie wysyłaj nic obcemu. „Nie mów rodzicom” to sygnał alarmowy: zablokuj, zgłoś i powiedz zaufanej osobie.");
+      interfejs.naglowek(b, "Czat: " + kto, "Nieznajomy pisze dalej:");
+      b.appendChild(elem("p", "quote", o.dalej));
+      interfejs.wybor(b, o.opcje2, dobrze, zle, o.blad2);
     };
-    ui.head(b, "Czat: ProGamer_99", "Nieznajomy z gry pisze do Ciebie:");
-    b.appendChild(el("p", "quote", "„Hej, świetnie grasz! Ile masz lat i gdzie mieszkasz?”"));
-    ui.choice(b, [
-      ["Podam miasto i szkołę", 0],
-      ["Nie podam danych osobowych", 1],
-      ["Podam tylko wiek", 0]
-    ], step2, no, "Obcym nie podajemy wieku, miejsca ani szkoły. Z tych informacji łatwo złożyć obraz o Tobie.");
+    interfejs.naglowek(b, "Czat: " + kto, "Nieznajomy z internetu pisze do Ciebie:");
+    b.appendChild(elem("p", "quote", o.start));
+    interfejs.wybor(b, o.opcje1, krok2, zle, o.blad1);
   },
 
-  // --- Oszustwo w grze ---
-  gamescam(b, ok, no) {
-    ui.head(b, "Wymiana w grze", "Gracz pisze:");
-    b.appendChild(el("p", "quote", "„Wyślij mi swojego skina za 200 zł, a oddam Ci dwa! Ty pierwszy, ja uczciwy. Albo wejdź na skins-trade.top i zaloguj się kontem gry.”"));
-    ui.choice(b, [
-      ["Wysyłam pierwszy, bo dwa to okazja", 0],
-      ["Odmawiam i wymieniam tylko oficjalną wymianą w grze", 1],
-      ["Loguję się na skins-trade.top", 0]
-    ], ok, no, "„Ty pierwszy” i logowanie na obcej stronie to klasyczne metody kradzieży kont i przedmiotów.");
+  oszustwoWGrze(b, dobrze, zle) {
+    const o = nastepny("oszustwa", PRZYKLADY.oszustwa);
+    interfejs.naglowek(b, "Wymiana w grze", "Gracz pisze:");
+    b.appendChild(elem("p", "quote", o.tresc));
+    interfejs.wybor(b, o.opcje, dobrze, zle, o.blad);
+  },
+
+  /* ----- nowe gry ----- */
+
+  hasla(b, dobrze, zle) {
+    const zestaw = nastepny("hasla", PRZYKLADY.hasla);
+    interfejs.naglowek(b, "Atak słownikowy", "Atakujący testuje popularne hasła. Ustaw na koncie to, które jest najtrudniejsze do odgadnięcia.");
+    interfejs.wybor(b, zestaw, dobrze, zle, "Dobre hasło jest długie i nieoczywiste. Imię, data, ciąg cyfr albo popularne słowo łatwo zgadnąć.");
+  },
+
+  linki(b, dobrze, zle) {
+    const l = nastepny("linki", PRZYKLADY.linki);
+    interfejs.naglowek(b, "Podejrzany link", "Dostałeś wiadomość, że musisz zalogować się do " + l.co + ". Który adres jest prawdziwy?");
+    interfejs.wybor(b, l.opcje, dobrze, zle, "Spójrz na domenę tuż przed pierwszym ukośnikiem. Podróbki mają literówki, dodatkowe człony i dziwne końcówki (.top, .xyz, .ru).");
+  },
+
+  telefon(b, dobrze, zle) {
+    const t = nastepny("telefony", PRZYKLADY.telefony);
+    interfejs.naglowek(b, "Podejrzany telefon", "Dostajesz taką wiadomość lub telefon:");
+    b.appendChild(elem("p", "quote", t.tresc));
+    interfejs.wybor(b, t.opcje, dobrze, zle, t.blad);
+  },
+
+  kod(b, dobrze, zle) {
+    const k = nastepny("kody", PRZYKLADY.kody);
+    interfejs.naglowek(b, "Podejrzany kod QR", "Trafiasz na taką sytuację:");
+    b.appendChild(elem("p", "quote", k.tresc));
+    interfejs.wybor(b, k.opcje, dobrze, zle, k.blad);
+  },
+
+  aplikacja(b, dobrze, zle) {
+    const a = nastepny("aplikacjeSklep", PRZYKLADY.aplikacjeSklep);
+    interfejs.naglowek(b, "Sklep z aplikacjami", "Chcesz pobrać „" + a.nazwa + "”. Którą wersję wybierasz?");
+    interfejs.wybor(b, a.opcje, dobrze, zle, "Sprawdź wydawcę, liczbę pobrań i uprawnienia. Pobieraj tylko z oficjalnego sklepu. „Odblokowane” wersje z forów to pułapka.");
+  },
+
+  uprawnienia(b, dobrze, zle) {
+    const a = nastepny("aplikacje", PRZYKLADY.aplikacje);
+    interfejs.naglowek(b, "Uprawnienia aplikacji", "„" + a.nazwa + "” prosi o dostęp. Zaznacz tylko to, co jest jej naprawdę potrzebne. Jeśli nic, nie zaznaczaj niczego.");
+    const opcje = pomieszaj(a.uprawnienia);
+    const pola = interfejs.polaWyboru(b, opcje.map(o => o[0]));
+    interfejs.przycisk(b, "Zatwierdź", () => {
+      pola.every((c, i) => c.checked === !!opcje[i][1]) ? dobrze()
+        : zle("Aplikacja ma dostać tylko to, czego potrzebuje do działania. Nadmiar uprawnień to ryzyko dla Twoich danych.");
+    }, "a");
   }
 };
 
-/* ---- otwieranie i zamykanie zadania ---- */
-function openTask(a) {
-  const b = $("#v-task"); b.innerHTML = ""; S.task = a;
-  const back = el("button", "a", "← Wróć"); back.onclick = () => closeTask(false);
-  const body = el("div"); b.append(back, body); view("task");
+function otworzZadanie(a) {
+  const b = $("#v-task"); b.innerHTML = ""; stan.zadanie = a;
+  const wroc = elem("button", "a", "← Wróć"); wroc.onclick = () => zamknijZadanie(false);
+  const zawartosc = elem("div"); b.append(wroc, zawartosc); widok("task");
 
-  const onOk = () => {
-    removeAlert(a); SFX.ok(); say("Zagrożenie „" + a.th.name + "” odparte.", "good"); closeTask(true);
+  const poDobrej = () => {
+    const premia = Math.max(0, Math.round(100 - a.m)), punkty = pktZa(USTAW.punktyZadanie + premia);
+    stan.odparte++; stan.pkt += punkty;
+    usunAlert(a); DZWIEKI.dobrze();
+    komunikat("Zagrożenie „" + a.zag.nazwa + "” odparte. +" + punkty, "good"); zamknijZadanie(true);
   };
-  const onNo = msg => {
-    a.m = Math.min(90, a.m + CFG.failPenalty); SFX.bad(); say(msg + " (zagrożenie lekko rośnie)", "bad");
-  };
-  TASKS[a.th.id](body, onOk, onNo);
+  // każda zła odpowiedź zabiera jedno serce
+  const poZlej = wiadomosc => stracZycie(wiadomosc + " −1 ♥", a.zag.porada, DZWIEKI.blad);
+  ZADANIA[a.zag.id](zawartosc, poDobrej, poZlej);
+  const wstawka = (fab().wstawki || {})[a.zag.id];
+  if (wstawka) zawartosc.insertBefore(elem("p", "fab", wstawka), zawartosc.firstChild);
 }
-function closeTask(solved) {
-  S.tt.forEach(clearTimeout); S.tt = []; S.need = 0; S.task = null;
+function zamknijZadanie(rozwiazane) {
+  stan.timery.forEach(clearTimeout); stan.timery = []; stan.potrzebny = 0; stan.zadanie = null;
   $("#ph").innerHTML = "Telefon<br>brak kodów"; $("#ph").classList.remove("on");
-  view("al");
-  if (!solved) say("Zadanie przerwane.");
+  widok("al");
+  if (!rozwiazane) komunikat("Zadanie przerwane.");
 }
