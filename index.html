@@ -67,7 +67,7 @@
   <main id="stage">
     <div id="floor"></div>
     <div id="room">
-      <div id="shelf"><i></i><i></i><i></i></div>
+      <div id="shelf"></div>
       <div id="lamp"></div>
       <div id="stand"></div>
       <div id="mon"><div id="scr">
@@ -79,9 +79,25 @@
         </div>
       </div></div>
       <div id="kb"></div>
-      <div id="ph">Telefon<br>brak kodów</div>
+      <div id="pad"><div id="mouse"><b></b><i></i></div></div>
+      <div id="pc" title="Komputer">
+        <div class="tacka"><span class="tdisc"></span></div>
+        <span class="przyc"></span><i class="led"></i><i class="led2"></i>
+        <span class="gniazdo"></span><em>USB</em><div class="kratka"></div>
+      </div>
+      <div id="bok">
+        <div id="ph">Telefon<br>brak kodów</div>
+        <button id="usb" type="button" aria-label="Twój niebieski pendrive"><span class="vis"></span><span class="lab">💾 Twój pendrive</span></button>
+        <button id="usb2" type="button" aria-label="Obcy szary pendrive"><span class="vis"></span><span class="lab">💾 Obcy pendrive</span></button>
+        <button id="szuf" type="button" aria-label="Szuflada z płytami"><span class="vis"><i></i><i></i></span><span class="lab">🗄 Szuflada z płytami</span></button>
+        <button id="ksbtn" type="button" aria-label="Książki z podpowiedziami"><span class="lab">📚 Książki</span></button>
+      </div>
     </div>
     <div id="flash"></div>
+    <div id="okno-ks" class="okno"><button class="x" id="ks-x" type="button" aria-label="Zamknij">✕</button>
+      <h3 id="ks-tytul"></h3><ul id="ks-lista"></ul><div id="ks-chips"></div></div>
+    <div id="okno-plyty" class="okno"><button class="x" id="pl-x" type="button" aria-label="Zamknij">✕</button>
+      <h3>Szuflada z płytami</h3><p id="pl-info"></p><div id="pl-lista"></div></div>
   </main>
   <div id="obroc"><div class="tel">📱</div><b>Obróć telefon poziomo</b><p>Gra działa w poziomie. Do tego czasu jest wstrzymana.</p><button class="btn" id="b-obroc">Pełny ekran</button></div>
 </section>
@@ -101,9 +117,11 @@
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/przyklady.js"></script>
-<script src="js/karteczki.js"></script>
+<script src="js/przyklady2.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/core.js"></script>
+<script src="js/ksiazki.js"></script>
+<script src="js/biurko.js"></script>
 <script src="js/fabula.js"></script>
 <script src="js/threats.js"></script>
 <script src="js/mail.js"></script>

@@ -36,7 +36,33 @@ const ZAGROZENIA = [
   {id:"obcy", from:5, nazwa:"Obcy na czacie", opis:"Nieznajomy dopytuje o Ciebie.",
    porada:"Nie podawaj obcym danych ani zdjęć. Gdy ktoś każe trzymać rozmowę w tajemnicy, powiedz dorosłemu."},
   {id:"oszustwoWGrze", from:5, nazwa:"Oszustwo w grze", opis:"Ktoś proponuje „super wymianę”.",
-   porada:"Wymieniaj przedmioty tylko oficjalnymi narzędziami gry. „Ty pierwszy” to klasyczny przekręt."}
+   porada:"Wymieniaj przedmioty tylko oficjalnymi narzędziami gry. „Ty pierwszy” to klasyczny przekręt."},
+
+  /* ----- nowe: część to uczciwe sytuacje, część podpuchy ----- */
+  {id:"znajomi", from:1, nazwa:"Nowe zaproszenia", opis:"Kilka osób chce Cię dodać do znajomych.",
+   porada:"Akceptuj tylko osoby, które znasz. Sprawdź wspólnych znajomych, wiek konta i to, czy profil nie kopiuje Twojego kolegi."},
+  {id:"logowanie", from:1, nazwa:"Nowe logowanie", opis:"Konto zgłasza logowanie z nowego miejsca.",
+   porada:"Porównaj powiadomienie z faktami: czy to Ty się logowałeś? Jeśli nie, zmień hasło i włącz 2FA. Jeśli tak, nie panikuj."},
+  {id:"klucz", from:2, nazwa:"Klucz bezpieczeństwa", opis:"Konto czeka na Twój klucz USB.",
+   porada:"Wpinasz tylko własny klucz. Obcy pendrive może mieć wirusa."},
+  {id:"aktualizacja", from:2, nazwa:"Okienko aktualizacji", opis:"Wyskoczyło okienko z aktualizacją.",
+   porada:"Aktualizacje instaluj z ustawień systemu lub oficjalnego sklepu, nie z okienek na stronach. Prawdziwe aktualizacje trzeba jednak instalować."},
+  {id:"rozszerzenie", from:2, nazwa:"Dodatek do przeglądarki", opis:"Przeglądarka proponuje rozszerzenie.",
+   porada:"Wybieraj dodatki z oficjalnego sklepu, ze znanym wydawcą, i unikaj tych, które proszą o dostęp do wszystkich stron."},
+  {id:"pendrive", from:3, nazwa:"Pendrive na biurku", opis:"Ktoś zostawił nośnik na biurku.",
+   porada:"Obcych pendrive’ów się nie wpina. Oddaj go dorosłemu. Własny, znany nośnik jest w porządku."},
+  {id:"paczka", from:3, nazwa:"Wiadomość o paczce", opis:"Kurier coś od Ciebie chce.",
+   porada:"Prawdziwą przesyłkę sprawdzisz w aplikacji kuriera. SMS z dopłatą lub prośbą o dane to pułapka, ale zwykła informacja o paczce, na którą czekasz, jest w porządku."},
+  {id:"router", from:3, nazwa:"Domowy router", opis:"Router ma otwarte furtki.",
+   porada:"Router: silne szyfrowanie, zmienione hasło panelu, aktualizacje, bez WPS i bez zdalnego dostępu."},
+  {id:"ransomware", from:4, nazwa:"Pliki zaszyfrowane", opis:"Wirus szyfruje Twoje dokumenty.",
+   porada:"Okupu się nie płaci. Kopia zapasowa jest po to, żeby przywrócić pliki."},
+  {id:"kopia", from:4, nazwa:"Brak kopii zapasowej", opis:"Ważne pliki istnieją w jednym egzemplarzu.",
+   porada:"Rób kopie ważnych plików na własnym nośniku. Pliki tymczasowe i instalatory pomiń."},
+  {id:"bluetooth", from:4, nazwa:"Obce urządzenie", opis:"Coś próbuje się z Tobą połączyć.",
+   porada:"Odrzucaj pliki i parowanie od nieznanych urządzeń. Akceptuj tylko to, na co czekasz od osoby, którą znasz."},
+  {id:"prosba", from:5, nazwa:"Prośba od „znajomego”", opis:"Ktoś o coś Cię prosi na czacie.",
+   porada:"Zanim spełnisz prośbę, sprawdź, kto prosi i o co. Zwykła prośba o notatki jest w porządku, prośba o kod nie."}
 ];
 
 const MAILE = [

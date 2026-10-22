@@ -121,7 +121,7 @@ function zapiszPostep() {
 const usunPostep = () => { try { localStorage.removeItem("cybernoc_pauza"); } catch (e) {} };
 
 function zacznijDzien(n, snap) {
-  kontekst(); wstrzymana = false;
+  kontekst(); wstrzymana = false; biurko.wyczysc(); ksiazki.polec(null);
   stan = {
     dzien: n, t: 0, zycia: USTAW.zycia,
     aktywne: [], ostatnieZag: [],
@@ -141,7 +141,7 @@ function zacznijDzien(n, snap) {
   rysujAlerty(); rysujPoczte(); widok("al");
   zmienFaze(true);
   komunikat(snap ? "Wracasz do gry. Powodzenia!" :
-    dalej ? "Tryb nieskończony: poziom jak w dniu 5, liczą się punkty." : n === 1 ? fab().start : "Dzień się zaczął. Czekaj na alerty. Noc będzie cięższa.");
+    dalej ? "Tryb nieskończony: poziom jak w dniu 5, liczą się punkty." : n === 1 ? fab().start : "Dzień się zaczął. Podpowiedzi są w książkach na półce. Noc będzie cięższa.");
   pokaz("s-game");
   clearInterval(petla); petla = setInterval(krok, 100);
   startBrzeczenia();

@@ -44,5 +44,6 @@ function pauzaPoUtracieOkna() { if (petla && stan) ekranGlowny(); }
 document.addEventListener("visibilitychange", () => { if (document.hidden) pauzaPoUtracieOkna(); });
 addEventListener("blur", pauzaPoUtracieOkna);
 
-rysujKarteczki();
+ksiazki.start();
+biurko.start();
 ekranGlowny();

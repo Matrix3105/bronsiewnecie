@@ -23,6 +23,15 @@ const interfejs = {
   }
 };
 
+
+// wspólny szkielet gier ze scenariuszem: część jest uczciwa, część to podpucha
+function scenariuszGry(b, dobrze, zle, klucz, lista, tytul, intro) {
+  const s = nastepny(klucz, lista);
+  interfejs.naglowek(b, tytul, intro);
+  b.appendChild(elem("p", "quote", s.tresc));
+  interfejs.wybor(b, s.opcje, dobrze, zle, s.blad);
+}
+
 const ZADANIA = {
 
   zgadywanie(b, dobrze, zle) {
@@ -244,13 +253,125 @@ const ZADANIA = {
       pola.every((c, i) => c.checked === !!opcje[i][1]) ? dobrze()
         : zle("Aplikacja ma dostać tylko to, czego potrzebuje do działania. Nadmiar uprawnień to ryzyko dla Twoich danych.");
     }, "a");
-  }
+  },
+
+  /* ===== nowe gry: uczciwe sytuacje i podpuchy ===== */
+
+  znajomi(b, dobrze, zle) {
+    interfejs.naglowek(b, "Zaproszenia do znajomych", "Zaznacz tylko te osoby, które możesz zaakceptować. Resztę odrzuć.");
+    const lista = PRZYKLADY.zaproszenia;
+    const opcje = pomieszaj([
+      ...wybierz("zaprDobre", lista.filter(x => x[1]), 2 + (poz() > 3 ? 1 : 0)),
+      ...wybierz("zaprZle", lista.filter(x => !x[1]), 2 + (poz() > 2 ? 1 : 0))
+    ]);
+    const pola = interfejs.polaWyboru(b, opcje.map(o => o[0]));
+    interfejs.przycisk(b, "Zatwierdź", () => {
+      pola.every((c, i) => c.checked === !!opcje[i][1]) ? dobrze()
+        : zle("Akceptuj osoby, które znasz z życia. Sprawdź wspólnych znajomych i wiek konta, a konta kopiujące kolegę albo proszące o dane odrzuć.");
+    }, "a");
+  },
+
+  logowanie(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "logowania", PRZYKLADY.logowania, "Czy to Ty?", "Konto zgłasza logowanie. Porównaj to z faktami:"); },
+
+  klucz(b, dobrze, zle) {
+    const podpucha = Math.random() < .5;
+    interfejs.naglowek(b, "Klucz bezpieczeństwa", "Konto wymaga Twojego klucza USB. Podłącz swój niebieski pendrive do komputera, klikając go na biurku.");
+    if (podpucha) b.appendChild(elem("p", "quote", "Na biurku leży też obcy, szary pendrive z naklejką „Zdjęcia klasy 8b”. To nie Twój klucz."));
+    const stat = elem("p", "", "Czekam na klucz USB…"); b.appendChild(stat);
+    biurko.czekajUsb(rodzaj => {
+      if (rodzaj === "obcy") { zle("To nie jest Twój klucz. Obcy pendrive może mieć wirusa."); return false; }
+      stat.textContent = "Klucz rozpoznany.";
+      interfejs.przycisk(b, "Potwierdź logowanie", () => { biurko.wyjmij(); dobrze(); }, "a");
+    }, podpucha);
+  },
+
+  aktualizacja(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "aktualizacje", PRZYKLADY.aktualizacje, "Okienko aktualizacji", "Na ekranie pojawia się komunikat:"); },
+
+  rozszerzenie(b, dobrze, zle) {
+    const r = nastepny("rozszerzenia", PRZYKLADY.rozszerzenia);
+    interfejs.naglowek(b, "Dodatek do przeglądarki", "Szukasz rozszerzenia: " + r.co + ". Które wybierasz?");
+    interfejs.wybor(b, r.opcje, dobrze, zle, "Sprawdź wydawcę, opinie i uprawnienia. Dobry dodatek pochodzi z oficjalnego sklepu i nie prosi o dostęp do wszystkiego.");
+  },
+
+  pendrive(b, dobrze, zle) {
+    const s = nastepny("pendrive", PRZYKLADY.pendrive);
+    interfejs.naglowek(b, "Pendrive na biurku", s.obcy ? "Na biurku leży obcy, szary pendrive. Co robisz?" : "Chodzi o pendrive, który znasz. Co robisz?");
+    b.appendChild(elem("p", "quote", s.tresc));
+    interfejs.wybor(b, s.opcje, dobrze, zle, s.blad);
+    if (s.obcy) biurko.czekajUsb(rodzaj => {
+      if (rodzaj === "obcy") { zle("Wpiąłeś obcy pendrive. Wirus z nośnika uruchamia się po podłączeniu."); return false; }
+      komunikat("To Twój własny pendrive, a pytanie dotyczy tego drugiego."); return false;
+    }, true);
+  },
+
+  paczka(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "paczki", PRZYKLADY.paczki, "Wiadomość o paczce", "Dostajesz taką wiadomość:"); },
+
+  router(b, dobrze, zle) {
+    interfejs.naglowek(b, "Domowy router", "Ustaw router tak, żeby był jak najbezpieczniejszy, i zapisz.");
+    const ile = poz() <= 3 ? 2 : 3;
+    const opcje = pomieszaj([
+      ...wybierz("routDobre", PRZYKLADY.router.filter(o => o[1]), ile),
+      ...wybierz("routZle", PRZYKLADY.router.filter(o => !o[1]), ile)
+    ]);
+    const pola = interfejs.polaWyboru(b, opcje.map(o => o[0]));
+    pola.forEach((c, i) => c.checked = opcje[i][2]);
+    interfejs.przycisk(b, "Zapisz", () => {
+      const bledny = pola.findIndex((c, i) => c.checked !== opcje[i][1]);
+      bledny < 0 ? dobrze() : zle("Popraw ustawienie: „" + opcje[bledny][0] + "”.");
+    }, "a");
+  },
+
+  ransomware(b, dobrze, zle) {
+    const plyty = pomieszaj([
+      {n: nastepny("plytyDobre", PRZYKLADY.plyty.dobre), ok: 1},
+      ...wybierz("plytyZle", PRZYKLADY.plyty.zle, 3)
+    ]);
+    interfejs.naglowek(b, "Pliki zaszyfrowane", "Wirus zaszyfrował Twoje dokumenty. Kopię zapasową masz na płycie w szufladzie na biurku. Znajdź właściwą i włóż do napędu komputera.");
+    b.appendChild(elem("p", "quote", "„Twoje pliki są zaszyfrowane. Zapłać 0,05 BTC w ciągu 24 godzin, a je odzyskasz.”"));
+    interfejs.przycisk(b, "Zapłać okup (0,05 BTC)", () => zle("Okupu się nie płaci: nie ma gwarancji, a pieniądze trafiają do przestępców. Masz kopię na płycie."), "f");
+    const stat = elem("p", "", "Czekam na płytę z kopią zapasową…"); b.appendChild(stat);
+    biurko.czekajPlyta(plyty, p => {
+      if (!p.ok) { zle(p.blad || "To nie jest kopia zapasowa."); return false; }
+      stat.textContent = "Płyta wczytana: „" + p.n + "”.";
+      interfejs.przycisk(b, "Przywróć pliki z płyty", () => {
+        b.querySelectorAll("button").forEach(x => x.remove());
+        interfejs.postep(b, 1800, dobrze);
+      }, "a");
+    });
+  },
+
+  kopia(b, dobrze, zle) {
+    const podpucha = Math.random() < .5;
+    interfejs.naglowek(b, "Kopia zapasowa", "Skopiuj ważne pliki na własny pendrive. Najpierw podłącz niebieski pendrive do komputera, klikając go na biurku.");
+    if (podpucha) b.appendChild(elem("p", "quote", "Na biurku leży też obcy, szary pendrive. Nie jest Twój."));
+    const reszta = elem("div"); b.appendChild(reszta);
+    biurko.czekajUsb(rodzaj => {
+      if (rodzaj === "obcy") { zle("Obcy pendrive to ryzyko wirusa. Kopię rób tylko na własnym nośniku."); return false; }
+      reszta.innerHTML = "";
+      interfejs.naglowek(reszta, "Wybierz pliki do skopiowania", "Zaznacz tylko to, czego nie da się odtworzyć.");
+      const opcje = pomieszaj([
+        ...wybierz("plikiWazne", PRZYKLADY.pliki.wazne, 3).map(t => [t, 1]),
+        ...wybierz("plikiZbedne", PRZYKLADY.pliki.zbedne, 2).map(t => [t, 0])
+      ]);
+      const pola = interfejs.polaWyboru(reszta, opcje.map(o => o[0]));
+      interfejs.przycisk(reszta, "Kopiuj", () => {
+        if (!pola.every((c, i) => c.checked === !!opcje[i][1])) return zle("Skopiuj tylko dokumenty, zdjęcia i prace, czyli to, czego nie da się odtworzyć. Pliki tymczasowe i instalatory pomiń.");
+        reszta.innerHTML = "<b>Kopiowanie…</b>";
+        interfejs.postep(reszta, 1800, () => { biurko.wyjmij(); dobrze(); });
+      }, "a");
+    }, podpucha);
+  },
+
+  bluetooth(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "bluetooth", PRZYKLADY.bluetooth, "Obce urządzenie", "Telefon pokazuje komunikat:"); },
+
+  prosba(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "prosby", PRZYKLADY.prosby, "Prośba od „znajomego”", "Ktoś pisze do Ciebie:"); }
 };
 
 function otworzZadanie(a) {
   const b = $("#v-task"); b.innerHTML = ""; stan.zadanie = a;
   const wroc = elem("button", "a", "← Wróć"); wroc.onclick = () => zamknijZadanie(false);
   const zawartosc = elem("div"); b.append(wroc, zawartosc); widok("task");
+  biurko.wyczysc(); ksiazki.polec(a.zag.id);
 
   const poDobrej = () => {
     const premia = Math.max(0, Math.round(100 - a.m)), punkty = pktZa(USTAW.punktyZadanie + premia);
@@ -266,6 +387,7 @@ function otworzZadanie(a) {
 }
 function zamknijZadanie(rozwiazane) {
   stan.timery.forEach(clearTimeout); stan.timery = []; stan.potrzebny = 0; stan.zadanie = null;
+  biurko.wyczysc(); ksiazki.polec(null);
   $("#ph").innerHTML = "Telefon<br>brak kodów"; $("#ph").classList.remove("on");
   widok("al");
   if (!rozwiazane) komunikat("Zadanie przerwane.");
