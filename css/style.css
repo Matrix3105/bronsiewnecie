@@ -126,8 +126,9 @@ body.kompakt .tx{display:none}
 body.kompakt #nl{font-size:13px}
 body.kompakt #st{order:0;flex:1 1 140px;flex-basis:140px;height:2.8em;font-size:11px}
 body.kompakt #hud .sp{margin-left:0}
-body.kompakt #floor,body.kompakt #shelf,body.kompakt #lamp,body.kompakt #stand,body.kompakt #kb,body.kompakt body.kompakt #room{width:100%!important;height:100%!important;transform:none!important;display:flex;gap:10px;padding:6px 8px;align-items:stretch}
-body.kompakt #mon{position:static;flex:1;min-width:0;height:auto;border-width:6px;border-radius:8px}
+body.kompakt #floor,body.kompakt #shelf,body.kompakt #lamp,body.kompakt #stand,body.kompakt #kb,body.kompakt #pad,body.kompakt #pc{display:none}
+body.kompakt #room{box-sizing:border-box;width:100%;height:100%;transform:none!important;display:flex;gap:10px;padding:6px 8px;align-items:stretch}
+body.kompakt #mon{position:relative;left:auto;top:auto;flex:1;min-width:0;height:auto;border-width:6px;border-radius:8px}
 body.kompakt #scr{font-size:13px}
 body.kompakt #v-task button.f,body.kompakt .mailb button,body.kompakt #scr button.a{padding:7px 12px}
 body.kompakt .center{margin-top:2vh}
@@ -282,8 +283,8 @@ body.kompakt #bok button{position:static;display:block;flex:none;width:100%;heig
   background:#0d1426;border:1px solid var(--linia);border-radius:8px;padding:6px 6px;font-size:11px;line-height:1.25;text-align:left}
 body.kompakt #bok button .vis{display:none}
 body.kompakt #bok button .lab{display:block}
-body.kompakt #usb2,body.kompakt #usb2.pokaz{display:none}
-body.kompakt #usb2.pokaz{display:block}
+body.kompakt #bok #usb2{display:none}
+body.kompakt #bok #usb2.pokaz{display:block}
 body.kompakt #ksbtn{display:block}
 body.kompakt #usb.wpiety,body.kompakt #usb2.wpiety{border-color:var(--cyjan);color:var(--cyjan)}
 body.kompakt #usb.wpiety .lab::after,body.kompakt #usb2.wpiety .lab::after{content:" (wpięty)"}
@@ -387,3 +388,21 @@ body.kompakt #pulpit{font-size:15px}
 body.kompakt #tb{height:28px}
 body.kompakt #app{bottom:34px}
 body.kompakt #v-av button,body.kompakt #v-sys button,body.kompakt #v-kz button,body.kompakt #menu-pliku button{padding:7px 12px}
+
+/* ===== poprawki dla telefonu (poziomo) ===== */
+/* pasek u góry: mniejsze przyciski, żeby nie łamał się na dwa wiersze */
+body.kompakt #hud{gap:3px 6px;padding:3px 8px;flex-wrap:nowrap}
+body.kompakt #hud button{padding:2px 6px;font-size:12px}
+body.kompakt #hud .sp{gap:4px;flex:none}
+body.kompakt #hud .hp{gap:2px}
+body.kompakt #hud .pr{width:40px}
+body.kompakt #hud .clock{min-width:0}
+body.kompakt #st{flex:1 1 60px;min-width:0;font-size:10px;line-height:1.25;height:2.5em}
+/* okna z książkami i płytami: nie wychodzą poza ekran, a w środku da się przewijać */
+body.kompakt .okno{max-height:calc(100% - 12px);overflow-y:auto;box-sizing:border-box}
+/* menu startowe i pauza: tytuł i przyciski na górze, długi opis pod nimi */
+body.kompakt #s-start .center{display:flex;flex-direction:column}
+body.kompakt #s-start .center>*{order:1}
+body.kompakt #s-start .center>h1,body.kompakt #s-start .center>.pauza-info,body.kompakt #s-start .center>.menu-przyciski{order:0}
+/* w pauzie prawa kolumna z przyciskiem „Książki” zostaje odsłonięta */
+body.kompakt.pauza #s-start .center{max-width:none;margin-right:112px;margin-left:8px}
