@@ -406,3 +406,8 @@ body.kompakt #s-start .center>*{order:1}
 body.kompakt #s-start .center>h1,body.kompakt #s-start .center>.pauza-info,body.kompakt #s-start .center>.menu-przyciski{order:0}
 /* w pauzie prawa kolumna z przyciskiem „Książki” zostaje odsłonięta */
 body.kompakt.pauza #s-start .center{max-width:none;margin-right:112px;margin-left:8px}
+
+/* własny blok cyfr do kodu 2FA na telefonie */
+.keypad{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 6px}
+#v-task .keypad button.kp{flex:1 0 30px;min-width:30px;min-height:36px;padding:0;margin:0;background:#12384d;border:1px solid #2b6a88;border-radius:3px;color:#fff;font:inherit;font-size:16px}
+#v-task .keypad button.kp:active{background:#1d5a7a}
