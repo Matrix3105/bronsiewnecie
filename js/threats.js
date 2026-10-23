@@ -44,7 +44,7 @@ function aktualizujAlerty(delta) {
     if (a.m >= 75 && !a.alarm) { a.alarm = 1; DZWIEKI.alarm(); }
     if (a.m >= 100) {
       usunAlert(a);
-      wlamanie(a.zag.nazwa, a.zag.porada);
+      wlamanie(a.zag.nazwa + ": nie zdążyłeś zareagować", a.zag.porada);
       if (!petla) return;
     }
   }

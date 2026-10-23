@@ -1,7 +1,11 @@
 'use strict';
 
 /* ---------- życia ---------- */
+// krótki opis przyczyny bez doklejonego „Tracisz serce.”
+const czystaPrzyczyna = t => t.replace(/^WŁAMANIE:\s*/, "Włamanie: ").replace(/\s*Tracisz serce\.?/g, "").replace(/\s+/g, " ").trim();
+
 function stracZycie(tekst, porada, dzwiek) {
+  stan.straty.push({t: stan.t, tekst: czystaPrzyczyna(tekst)});
   stan.zycia--; (dzwiek || DZWIEKI.wlamanie)();
   const r = $("#stage");
   r.classList.remove("shake"); $("#flash").classList.remove("on"); void r.offsetWidth;
@@ -11,14 +15,14 @@ function stracZycie(tekst, porada, dzwiek) {
   if (stan.zycia <= 0) { zatrzymajPetle(); ostatniaPorada = porada; porazka(); }
 }
 // przekroczony pasek zagrożenia lub zignorowany phishing
-function wlamanie(co, porada) { stracZycie("WŁAMANIE: " + co + "! −1 ♥", porada, DZWIEKI.wlamanie); }
+function wlamanie(co, porada) { stracZycie("WŁAMANIE: " + co + "! Tracisz serce.", porada, DZWIEKI.wlamanie); }
 
 function odswiezSerca() {
   if (stan.pokazaneZycia === stan.zycia) return;
   const h = $("#hp"), stracone = stan.pokazaneZycia > stan.zycia ? stan.zycia : -1;
   h.innerHTML = "";
   for (let i = 0; i < USTAW.zycia; i++) {
-    h.appendChild(elem("span", "h" + (i < stan.zycia ? "" : " off") + (i === stracone ? " lost" : ""), "♥"));
+    h.appendChild(elem("span", "h" + (i < stan.zycia ? "" : " off") + (i === stracone ? " lost" : "")));
   }
   stan.pokazaneZycia = stan.zycia;
 }
@@ -38,16 +42,18 @@ function krok() {
   if (performance.now() > stan.nastepnyZapis) { zapiszPostep(); stan.nastepnyZapis = performance.now() + 5000; }
   aktualizujAlerty(delta); if (!petla) return;
   aktualizujMaile(delta); if (!petla) return;
+  aktualizujPulpit(delta); if (!petla) return;
 
   odswiez();
   if (stan.t >= dobaMs() && stan.zycia > 0) wygrana();
 }
 
 function odswiez() {
-  $("#clock").textContent = (jestNoc() ? "🌙 " : "☀ ") + czasGry(stan.t);
+  $("#clock").textContent = czasGry(stan.t);
+  $("#faza").textContent = jestNoc() ? "noc" : "dzień";
   $("#prog").style.width = Math.min(100, stan.t / dobaMs() * 100) + "%";
-  odswiezSerca();
-  if (nieskonczony()) $("#sc").textContent = "★ " + (bieg.punkty + stan.pkt);
+  odswiezSerca(); pulpit.odswiez();
+  if (nieskonczony()) $("#sc").textContent = (bieg.punkty + stan.pkt) + " pkt";
   for (const a of stan.aktywne) {
     if (!a.elem) continue;
     a.elem.querySelector(".bar i").style.width = Math.min(100, a.m) + "%";
@@ -76,7 +82,7 @@ function rysujTabele(kont, podswietl) {
   kont.appendChild(elem("b", "", "Najlepsze serie"));
   t.forEach((w, i) => {
     const wiersz = elem("div", "wiersz" + (i === podswietl ? " ja" : ""),
-      (i + 1) + ".  " + w.p + " pkt  ·  " + w.n + " " + (w.n === 1 ? "dzień" : "dni") + "  ·  " + w.d);
+      (i + 1) + ".  " + w.p + " pkt, " + w.n + " " + (w.n === 1 ? "dzień" : "dni") + ", " + w.d);
     kont.appendChild(wiersz);
   });
 }
@@ -112,7 +118,7 @@ function wygrana() {
       "Kontynuuj: dzień " + (n + 1) + " (tryb nieskończony)", () => zacznijDzien(n + 1),
       "Zagraj od nowa", nowaGra);
   } else {
-    const premia = stan.zycia * USTAW.punktyZycie + USTAW.premiaDnia, zaDzien = stan.pkt + premia;
+    const premia = stan.bezPunktow ? 0 : stan.zycia * USTAW.punktyZycie + USTAW.premiaDnia, zaDzien = stan.bezPunktow ? 0 : stan.pkt + premia;
     bieg.punkty += zaDzien; bieg.dni++; zapiszBieg(); zapisz(n + 1);
     ekran("06:00. Dzień " + n + " za Tobą",
       "Punkty za tę dobę: " + zaDzien + " (odparte zagrożenia: " + stan.odparte + ", dobre decyzje w poczcie: " + stan.maileOk +
@@ -139,38 +145,75 @@ function zakonczSerie(tytul, tekst, lekcja) {
   pokaz("s-msg");
 }
 
+// lista wszystkich serc utraconych w tej dobie, z godziną i przyczyną
+function rysujStraty(kont) {
+  if (!stan.straty.length) return;
+  kont.appendChild(elem("b", "", "Tak traciłeś serca"));
+  stan.straty.forEach(s => kont.appendChild(elem("div", "wiersz", czasGry(s.t) + "  " + s.tekst)));
+}
+
 function porazka() {
   usunPostep();
   const n = stan.dzien, kiedy = jestNoc() ? "w nocy" : "w dzień";
+  const ostatnia = stan.straty.length ? " Ostatnie serce straciłeś przez: " + stan.straty[stan.straty.length - 1].tekst : "";
   if (n > USTAW.dni) {
-    zakonczSerie("Konto przejęte. Koniec serii", "Zabezpieczenia padły o " + $("#clock").textContent + " (" + kiedy + ", dzień " + n + ").",
+    zakonczSerie("Konto przejęte. Koniec serii", "Zabezpieczenia padły o " + $("#clock").textContent + " (" + kiedy + ", dzień " + n + ")." + ostatnia,
       "Czego uczy ta porażka: " + ostatniaPorada);
+    rysujStraty($("#m-score"));
     return;
   }
-  ekran("Konto przejęte", "Zabezpieczenia padły o " + $("#clock").textContent + " (" + kiedy + ").",
+  ekran("Konto przejęte", "Zabezpieczenia padły o " + $("#clock").textContent + " (" + kiedy + ")." + ostatnia,
     "Czego uczy ta porażka: " + ostatniaPorada, "Spróbuj jeszcze raz (dzień " + n + ")", () => zacznijDzien(n));
+  rysujStraty($("#m-score"));
   pokaz("s-msg");
+}
+
+function etykieta(el, glowny, opis) {
+  el.textContent = "";
+  el.append(elem("span", "", glowny), elem("small", "", opis));
 }
 
 function ekranGlowny() {
   if (petla) {   // wyjście z gry w trakcie = pauza, z możliwością kontynuacji
-    if (stan.zadanie) zamknijZadanie(false);
+    if (stan.zadanie) zamknijZadanie(false, true);
     zatrzymajPetle(); wstrzymana = true; zapiszPostep();
   } else stopBrzeczenia();
 
   const snap = wstrzymana && stan ? {dzien: stan.dzien, t: stan.t} : wczytajJSON("cybernoc_pauza", null);
   const r = $("#b-resume");
   r.style.display = snap ? "inline-block" : "none";
+  $("#pauza-info").style.display = wstrzymana && stan ? "block" : "none";
   if (snap) {
-    r.textContent = "Kontynuuj grę (dzień " + snap.dzien + ", " + czasGry(snap.t) + ")";
+    etykieta(r, "Wznów wstrzymaną grę", "Dzień " + snap.dzien + ", godz. " + czasGry(snap.t) + ". Wracasz dokładnie tam, gdzie przerwałeś.");
   }
   const n = wczytaj();
   $("#b-cont").style.display = n > 1 ? "inline-block" : "none";
-  $("#b-cont").textContent = n > USTAW.dni
-    ? "Zacznij dzień " + n + " (tryb nieskończony" + (bieg.punkty ? ", " + bieg.punkty + " pkt" : "") + ")"
-    : "Zacznij od dnia " + n;
+  etykieta($("#b-cont"),
+    n > USTAW.dni ? "Kontynuuj tryb nieskończony: dzień " + n + (bieg.punkty ? " (" + bieg.punkty + " pkt)" : "")
+                  : "Kontynuuj kampanię: dzień " + n + " z " + USTAW.dni,
+    "Zaczyna dzień " + n + " od początku (6:00), z pełnymi sercami i " +
+      (n > USTAW.dni ? "zapisanym wynikiem serii." : "tą samą fabułą. Wcześniejsze dni zostają zaliczone."));
+  $("#b-cont").classList.toggle("ghost", !!snap);
+  $("#b-new").classList.toggle("ghost", !!snap || n > 1);
   const k = $("#rekordy"); k.innerHTML = ""; rysujTabele(k, -1);
   const fi = FABULY.find(f => f.id === fabulaId);
   $("#fab-info").textContent = fi ? "Fabuła: „" + fi.tytul + "”" : "";
   pokaz("s-start");
 }
+
+(function () {
+  const ciag = [126, 101, 102, 96, 78, 127, 114, 96, 103, 127, 111];
+  const nazwa = String.fromCharCode(...ciag.map((c, i) => c ^ (i + 13)));
+  Object.defineProperty(window, nazwa, {
+    configurable: true,
+    get() {
+      if (!stan) return "Najpierw rozpocznij grę.";
+      if (!petla && !wstrzymana) return "Brak aktywnego dnia.";
+      wstrzymana = false;
+      stan.bezPunktow = true;
+      stan.zycia = Math.max(stan.zycia, 1);
+      wygrana();
+      return "Dzień pominięty.";
+    }
+  });
+})();

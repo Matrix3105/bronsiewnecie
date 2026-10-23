@@ -4,7 +4,7 @@
 // Zadanie może „czekać” na akcję z biurka. Funkcja zwrotna zwraca false, gdy akcja była zła
 // i zadanie dalej czeka (np. wpięto obcy pendrive).
 const RZEDY_KLAWISZY = [
-  "`1234567890-=".split("").map(k => [k, 1]).concat([["⌫", 2.2]]),
+  "`1234567890-=".split("").map(k => [k, 1]).concat([["bksp", 2.2]]),
   [["Tab", 1.6]].concat("qwertyuiop[]".split("").map(k => [k, 1]), [["\\", 1.6]]),
   [["Caps", 1.9]].concat("asdfghjkl;'".split("").map(k => [k, 1]), [["Enter", 2.3]]),
   [["Shift", 2.4]].concat("zxcvbnm,./".split("").map(k => [k, 1]), [["Shift", 2.8]]),
@@ -21,7 +21,7 @@ const biurko = {
     RZEDY_KLAWISZY.forEach(r => {
       const rz = elem("div", "rz");
       r.forEach(([k, szer]) => {
-        const e = elem("span", "k", k.length > 1 || k === "⌫" ? k : (k === " " ? "" : k));
+        const e = elem("span", "k", k.length > 1 || k === "bksp" ? k : (k === " " ? "" : k));
         e.dataset.k = k.toLowerCase(); e.style.flex = szer + " 0 0";
         rz.appendChild(e);
       });
@@ -29,7 +29,7 @@ const biurko = {
     });
     document.addEventListener("keydown", e => {
       const nazwa = e.key === " " ? " " : e.key.toLowerCase();
-      const m = { backspace: "⌫", enter: "enter", shift: "shift", control: "ctrl", capslock: "caps", tab: "tab", alt: "alt" };
+      const m = { backspace: "bksp", enter: "enter", shift: "shift", control: "ctrl", capslock: "caps", tab: "tab", alt: "alt" };
       biurko.klawisz(m[nazwa] || nazwa);
     });
     $("#v-task").addEventListener("input", () => biurko.klawisz(null));   // klawiatura ekranowa
@@ -104,7 +104,7 @@ const biurko = {
     $("#pl-info").textContent = c ? "Wybierz płytę, którą włożysz do napędu. Czytaj opisy." : "W szufladzie leżą płyty. Teraz nie są Ci potrzebne.";
     const lista = $("#pl-lista"); lista.innerHTML = "";
     (c ? c.plyty : PRZYKLADY.plyty.domyslne.map(n => ({n}))).forEach(p => {
-      const b = elem("button", "pl", "💿 " + p.n); b.type = "button";
+      const b = elem("button", "pl", p.n); b.type = "button";
       b.onclick = () => biurko.wlozPlyte(p); lista.appendChild(b);
     });
     $("#okno-plyty").classList.add("on");

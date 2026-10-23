@@ -14,8 +14,9 @@ const interfejs = {
     const d = elem("div", "pb"), i = document.createElement("i");
     d.appendChild(i); b.appendChild(d);
     b.querySelectorAll("button,input,label").forEach(x => x.remove());
-    i.style.transition = "width " + czasMs + "ms linear"; void i.offsetWidth; i.style.width = "100%";
-    pozniej(poCzasie, czasMs);
+    i.style.width = "0%";
+    // jak skan antywirusa: operacja w czasie gry, więc idzie dalej po zamknięciu okna
+    const o = nowaOperacja(czasMs, poCzasie); o.zad = true; o.pasek = i;
   },
 
   wybor(b, opcje, dobrze, zle, komunikatBledu) {
@@ -44,7 +45,12 @@ const ZADANIA = {
     const i = document.createElement("input"); i.maxLength = 6; i.inputMode = "numeric"; i.placeholder = "000000"; i.oninput = DZWIEKI.type;
     b.appendChild(i);
     interfejs.przycisk(b, "Zatwierdź kod", () => {
-      if (pulapka) return zle("Podałeś kod, o który poprosił ktoś obcy. Kod 2FA to klucz do konta i zostaje tylko u Ciebie.");
+      if (pulapka) {
+        if (!i.value) return komunikat("Wpisz kod albo odrzuć prośbę.", "bad");
+        if (i.value === stan.kod) return zle("Podałeś prawdziwy kod osobie, która o niego poprosiła. Kod 2FA to klucz do konta i zostaje tylko u Ciebie.");
+        stan.potrzebny = 0; dobrze();
+        return komunikat("Wpisałeś błędny kod, więc oszust nic nie zyskał. Następnym razem odrzuć prośbę: prawdziwego kodu nie podaje się nikomu.", "good");
+      }
       if (i.value === stan.kod) { stan.potrzebny = 0; dobrze(); }
       else { stan.kod = losujKod(); i.value = ""; zle("Zły kod. Wysłano nowy, sprawdź telefon."); }
     }, "a");
@@ -183,7 +189,7 @@ const ZADANIA = {
       let wszystkie = true; r.innerHTML = "";
       WARUNKI.forEach(([napis, test]) => {
         const dobry = test(i.value); if (!dobry) wszystkie = false;
-        const wiersz = elem("div", "", (dobry ? "✓ " : "○ ") + napis); wiersz.style.color = dobry ? "var(--zielony)" : "var(--przygaszony)"; r.appendChild(wiersz);
+        const wiersz = elem("div", "", (dobry ? "[x] " : "[ ] ") + napis); wiersz.style.color = dobry ? "var(--zielony)" : "var(--przygaszony)"; r.appendChild(wiersz);
       });
       zapisz.disabled = !wszystkie; DZWIEKI.type();
     };
@@ -221,7 +227,8 @@ const ZADANIA = {
   linki(b, dobrze, zle) {
     const l = nastepny("linki", PRZYKLADY.linki);
     interfejs.naglowek(b, "Podejrzany link", "Dostałeś wiadomość, że musisz zalogować się do " + l.co + ". Który adres jest prawdziwy?");
-    interfejs.wybor(b, l.opcje, dobrze, zle, "Spójrz na domenę tuż przed pierwszym ukośnikiem. Podróbki mają literówki, dodatkowe człony i dziwne końcówki (.top, .xyz, .ru).");
+    b.appendChild(elem("p", "fab", "Prawdziwy adres jest krótki i kończy się .pl lub .com. Fałszywy ma literówkę, cyfrę zamiast litery, dopisek (24, darmowe) albo końcówkę .top, .xyz, .ru."));
+    interfejs.wybor(b, l.opcje, dobrze, zle, "To fałszywy adres. Prawdziwy jest krótki i kończy się zwykłą końcówką. Fałszywe mają literówki (0 zamiast o), dopiski jak „24” czy „darmowe” i końcówki .top, .xyz, .ru, .gift.");
   },
 
   telefon(b, dobrze, zle) {
@@ -367,9 +374,12 @@ const ZADANIA = {
   prosba(b, dobrze, zle) { scenariuszGry(b, dobrze, zle, "prosby", PRZYKLADY.prosby, "Prośba od „znajomego”", "Ktoś pisze do Ciebie:"); }
 };
 
+const zadanieLaduje = () => !!stan.zadanie && stan.operacje.some(o => o.zad);
+
 function otworzZadanie(a) {
+  if (stan.zadanie && stan.zadanie !== a && zadanieLaduje()) { komunikat("Trwa już inne zadanie. Poczekaj, aż się skończy ładowanie.", "bad"); DZWIEKI.blad(); return; }
   const b = $("#v-task"); b.innerHTML = ""; stan.zadanie = a;
-  const wroc = elem("button", "a", "← Wróć"); wroc.onclick = () => zamknijZadanie(false);
+  const wroc = elem("button", "a", "Wróć"); wroc.onclick = () => zamknijZadanie(false);
   const zawartosc = elem("div"); b.append(wroc, zawartosc); widok("task");
   biurko.wyczysc(); ksiazki.polec(a.zag.id);
 
@@ -380,15 +390,16 @@ function otworzZadanie(a) {
     komunikat("Zagrożenie „" + a.zag.nazwa + "” odparte. +" + punkty, "good"); zamknijZadanie(true);
   };
   // każda zła odpowiedź zabiera jedno serce
-  const poZlej = wiadomosc => stracZycie(wiadomosc + " −1 ♥", a.zag.porada, DZWIEKI.blad);
+  const poZlej = wiadomosc => stracZycie(wiadomosc + " Tracisz serce.", a.zag.porada, DZWIEKI.blad);
   ZADANIA[a.zag.id](zawartosc, poDobrej, poZlej);
   const wstawka = (fab().wstawki || {})[a.zag.id];
   if (wstawka) zawartosc.insertBefore(elem("p", "fab", wstawka), zawartosc.firstChild);
 }
-function zamknijZadanie(rozwiazane) {
+function zamknijZadanie(rozwiazane, bezWidoku) {
   stan.timery.forEach(clearTimeout); stan.timery = []; stan.potrzebny = 0; stan.zadanie = null;
+  stan.operacje = stan.operacje.filter(o => !o.zad);
   biurko.wyczysc(); ksiazki.polec(null);
   $("#ph").innerHTML = "Telefon<br>brak kodów"; $("#ph").classList.remove("on");
-  widok("al");
+  if (!bezWidoku && pulpit.otwarta === "alerty") widok("al");
   if (!rozwiazane) komunikat("Zadanie przerwane.");
 }

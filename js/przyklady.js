@@ -299,12 +299,16 @@ const PRZYKLADY = {
     [["MojePsy1", 0], ["Gitara-Smok-Lodowka-Trawa-17", 1], ["Pass1234", 0], ["Marta!Marta", 0]]
   ],
   linki: [
-    {co: "konta na Allegro", opcje: [["https://allegro.pl/logowanie", 1], ["https://allegro.pl.logowanie-24.top", 0], ["https://allegr0.pl/login", 0], ["https://allegro-pl.konto-weryfikacja.com", 0]]},
+    {co: "konta na Allegro", opcje: [["https://allegro.pl/logowanie", 1], ["https://allegro.pl.logowanie-24.top", 0], ["https://allegr0.pl/login", 0], ["https://darmowe-allegro.xyz", 0]]},
     {co: "paczki InPost", opcje: [["https://inpost.pl/sledzenie-przesylek", 1], ["https://inpost.pl.doplata-paczki.ru", 0], ["https://1npost.pl/odbierz", 0], ["https://inpost-paczka.top/zaplac", 0]]},
-    {co: "banku mBank", opcje: [["https://online.mbank.pl", 1], ["https://mbank.pl.panel-klienta.top", 0], ["https://mbank-logowanie.xyz", 0], ["http://mbank.pl-bezpieczenstwo.com", 0]]},
-    {co: "serwisu OLX", opcje: [["https://www.olx.pl", 1], ["https://olx.pl.wplata-24.xyz", 0], ["https://0lx.pl/odbierz-pieniadze", 0], ["https://olx-platnosc-bezpieczna.top", 0]]},
-    {co: "Poczty Polskiej", opcje: [["https://www.poczta-polska.pl", 1], ["https://poczta-polska.pl.sledzenie-paczki.top", 0], ["https://poczta-polska-oplata.com", 0], ["https://pocztapolska.dop1ata.info", 0]]},
-    {co: "sklepu Steam", opcje: [["https://store.steampowered.com", 1], ["https://steamcommunnity.com/gift", 0], ["https://steampowered.gift/odbierz", 0], ["https://steam-prezent.top/logowanie", 0]]},
-    {co: "poczty szkolnej", opcje: [["https://poczta.szkola.edu.pl", 1], ["https://szkola.edu.pl.poczta-ucznia.ru", 0], ["https://poczta-szkola-edu.top/login", 0], ["https://sz-kola.edu.pl.verify.net", 0]]}
+    {co: "banku mBank", opcje: [["https://www.mbank.pl", 1], ["https://mbank.pl.panel-klienta.top", 0], ["https://mbank-logowanie.xyz", 0], ["https://mbamk.pl/login", 0]]},
+    {co: "serwisu OLX", opcje: [["https://www.olx.pl", 1], ["https://olx.pl.wplata-24.xyz", 0], ["https://0lx.pl/odbierz-pieniadze", 0], ["https://olx-wygrana-odbierz.top", 0]]},
+    {co: "Poczty Polskiej", opcje: [["https://www.poczta-polska.pl", 1], ["https://poczta-polska.pl.sledzenie-paczki.top", 0], ["https://poczta-polska-oplata.ru", 0], ["https://poczta-polska.oplata-paczki.xyz", 0]]},
+    {co: "sklepu Steam", opcje: [["https://store.steampowered.com", 1], ["https://steam-darmowe-gry.top/logowanie", 0], ["https://steampowered.gift/odbierz", 0], ["https://store.steampovvered.com", 0]]},
+    {co: "poczty szkolnej", opcje: [["https://poczta.szkola.edu.pl", 1], ["https://szkola.edu.pl.poczta-ucznia.ru", 0], ["https://poczta-szkola-edu.top/login", 0], ["https://poczta.szkola.edu.pl.verify.net", 0]]},
+    {co: "konta Google", opcje: [["https://accounts.google.com", 1], ["https://accounts.google.com.zaloguj-sie.top", 0], ["https://qooqle.com/login", 0], ["https://google-konto-bezpieczne.xyz", 0]]},
+    {co: "konta Netflix", opcje: [["https://www.netflix.com/pl", 1], ["https://netflix.com.odnow-konto.ru", 0], ["https://nettflix.com/login", 0], ["https://netflix-platnosc.top", 0]]},
+    {co: "serwisu Discord", opcje: [["https://discord.com/login", 1], ["https://discord-nitro-gratis.gift", 0], ["https://discord.com.nagroda.top", 0], ["https://dicsord.com/login", 0]]}
   ]
+
 };

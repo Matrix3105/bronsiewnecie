@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cyber Noc – Broń się w necie</title>
+<title>Pułapka w Sieci: broń się w necie</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -11,19 +11,38 @@
 
 <section id="s-start" class="screen on">
   <div class="center">
-    <h1>Cyber Noc</h1>
+    <h1>Pułapka w Sieci</h1>
     <p>Siedzisz sam w pokoju, a w sieci ktoś próbuje się włamać na Twoje konta. Każda doba trwa od 6:00 do 6:00: w dzień jest trochę spokojniej, w nocy hakerzy atakują mocniej. Utrzymaj zabezpieczenia do rana.</p>
     <ul>
+      <li><b>Pulpit:</b> na monitorze są aplikacje: Alerty, Poczta, Komunikator, Antywirus i Panel systemu. Czerwona liczba na ikonie oznacza, że coś czeka, a migająca, że to pilne.</li>
       <li><b>Alerty:</b> gdy zagrożenie rośnie, kliknij „Reaguj” i rozwiąż minigrę. Gdy robisz zadanie, zagrożenie przestaje rosnąć.</li>
-      <li><b>Poczta:</b> oceń każdy mail: „Zgłoś phishing” albo „Bezpieczny”.</li>
+      <li><b>Poczta i czat:</b> zwykłych wiadomości nie trzeba ocenić od razu, ale zła decyzja kosztuje serce. Pilne maile i podejrzane pliki na pulpicie mają limit czasu.</li>
       <li><b>Telefon:</b> dotknij go, żeby zobaczyć kod 2FA.</li>
     </ul>
     <p>Masz 5 serc. Każda zła odpowiedź i każde włamanie zabiera jedno. Przetrwaj 5 dób, a potem walcz o wynik w trybie nieskończonym.</p>
-    <button class="btn" id="b-resume" style="display:none">Kontynuuj grę</button>
-    <button class="btn" id="b-new">Zacznij od dnia 1</button>
-    <button class="btn ghost" id="b-cont" style="display:none">Kontynuuj</button>
+    <p id="pauza-info" class="pauza-info" style="display:none">Gra jest wstrzymana. Możesz w tym czasie czytać książki z podpowiedziami: kliknij książkę na półce w tle albo przycisk „Książki”.</p>
+    <div class="menu-przyciski">
+      <button class="btn menu-btn" id="b-resume" style="display:none"></button>
+      <button class="btn menu-btn" id="b-cont" style="display:none"></button>
+      <button class="btn menu-btn" id="b-new"><span>Nowa gra</span><small>Zaczyna od dnia 1 i kasuje postęp kampanii. Na początku wybierasz fabułę.</small></button>
+      <button class="btn ghost menu-btn" id="b-tut"><span>Jak grać</span><small>Krótki samouczek: o co chodzi w grze i do czego służy każdy element.</small></button>
+    </div>
     <div id="rekordy" class="tabela"></div>
     <p id="fab-info" class="fab-info"></p>
+  </div>
+</section>
+
+<section id="s-tutorial" class="screen">
+  <div class="center tut">
+    <button class="x" id="tut-x" type="button" aria-label="Zamknij samouczek">Zamknij</button>
+    <small id="tut-licznik"></small>
+    <h1 id="tut-tytul"></h1>
+    <div id="tut-tekst"></div>
+    <div id="tut-kropki"></div>
+    <div class="tut-nawigacja">
+      <button class="btn ghost" id="tut-wstecz" type="button">Wstecz</button>
+      <button class="btn" id="tut-dalej" type="button">Dalej</button>
+    </div>
   </div>
 </section>
 
@@ -44,7 +63,7 @@
     <h1>Wybierz fabułę</h1>
     <p>Każda opowiada, jak wpakowałeś się w kłopoty. Fabuła zmienia treść alertów, maile i to, jakie zagrożenia pojawiają się częściej.</p>
     <div id="w-lista"></div>
-    <button class="btn" id="w-losuj">🎲 Wylosuj fabułę</button>
+    <button class="btn" id="w-losuj">Wylosuj fabułę</button>
     <button class="btn ghost" id="w-wroc">Wróć</button>
   </div>
 </section>
@@ -52,15 +71,15 @@
 <section id="s-game" class="screen on">
   <header id="hud">
     <span id="nl">Dzień 1</span>
-    <span class="clock" id="clock">☀ 06:00</span>
+    <span class="clock"><span id="clock">06:00</span><small id="faza">dzień</small></span>
     <div class="pr"><i id="prog"></i></div>
     <span class="hp" id="hp"></span>
     <span class="sc" id="sc" style="display:none"></span>
     <div id="st"></div>
     <div class="sp">
-      <button id="mute" title="Dźwięk"><span class="ik">🔊</span><span class="tx">Dźwięk: wł.</span></button>
-      <button id="full" title="Pełny ekran"><span class="ik">⛶</span><span class="tx">Pełny ekran</span></button>
-      <button id="menu" title="Menu"><span class="ik">☰</span><span class="tx">Menu</span></button>
+      <button id="mute" title="Dźwięk"><span class="ik">Dźwięk</span><span class="tx">Dźwięk: wł.</span></button>
+      <button id="full" title="Pełny ekran"><span class="ik">Ekran</span><span class="tx">Pełny ekran</span></button>
+      <button id="menu" title="Menu"><span class="ik">Menu</span><span class="tx">Menu</span></button>
     </div>
   </header>
 
@@ -71,12 +90,26 @@
       <div id="lamp"></div>
       <div id="stand"></div>
       <div id="mon"><div id="scr">
-        <div id="tabs"><button id="t-al" class="on">Alerty</button><button id="t-ml">Poczta <span id="bdg"></span></button></div>
-        <div id="views">
-          <div id="v-al"></div>
-          <div id="v-ml" style="display:none"></div>
-          <div id="v-task" style="display:none"></div>
+        <div id="pulpit">
+          <div id="slonce"></div>
+          <div id="ikony"></div>
+          <div id="pliki"></div>
+          <div id="menu-pliku"></div>
         </div>
+        <div id="app">
+          <div id="app-pasek"><b id="app-tytul"></b><button id="app-x" type="button">Zamknij</button></div>
+          <div id="views">
+            <div id="v-al"></div>
+            <div id="v-ml" style="display:none"></div>
+            <div id="v-task" style="display:none"></div>
+            <div id="v-kom" style="display:none"></div>
+            <div id="v-av" style="display:none"></div>
+            <div id="v-sys" style="display:none"></div>
+            <div id="v-kz" style="display:none"></div>
+            <div id="v-plik" style="display:none"></div>
+          </div>
+        </div>
+        <div id="tb"><button id="tb-pulpit" type="button">Pulpit</button><span id="tb-app"></span><span id="tb-tray">Spokojnie</span></div>
       </div></div>
       <div id="kb"></div>
       <div id="pad"><div id="mouse"><b></b><i></i></div></div>
@@ -87,19 +120,19 @@
       </div>
       <div id="bok">
         <div id="ph">Telefon<br>brak kodów</div>
-        <button id="usb" type="button" aria-label="Twój niebieski pendrive"><span class="vis"></span><span class="lab">💾 Twój pendrive</span></button>
-        <button id="usb2" type="button" aria-label="Obcy szary pendrive"><span class="vis"></span><span class="lab">💾 Obcy pendrive</span></button>
-        <button id="szuf" type="button" aria-label="Szuflada z płytami"><span class="vis"><i></i><i></i></span><span class="lab">🗄 Szuflada z płytami</span></button>
-        <button id="ksbtn" type="button" aria-label="Książki z podpowiedziami"><span class="lab">📚 Książki</span></button>
+        <button id="usb" type="button" aria-label="Twój niebieski pendrive"><span class="vis"></span><span class="lab">Twój pendrive</span></button>
+        <button id="usb2" type="button" aria-label="Obcy szary pendrive"><span class="vis"></span><span class="lab">Obcy pendrive</span></button>
+        <button id="szuf" type="button" aria-label="Szuflada z płytami"><span class="vis"><i></i><i></i></span><span class="lab">Szuflada z płytami</span></button>
+        <button id="ksbtn" type="button" aria-label="Książki z podpowiedziami"><span class="lab">Książki</span></button>
       </div>
     </div>
     <div id="flash"></div>
-    <div id="okno-ks" class="okno"><button class="x" id="ks-x" type="button" aria-label="Zamknij">✕</button>
+    <div id="okno-ks" class="okno"><button class="x" id="ks-x" type="button" aria-label="Zamknij">Zamknij</button>
       <h3 id="ks-tytul"></h3><ul id="ks-lista"></ul><div id="ks-chips"></div></div>
-    <div id="okno-plyty" class="okno"><button class="x" id="pl-x" type="button" aria-label="Zamknij">✕</button>
+    <div id="okno-plyty" class="okno"><button class="x" id="pl-x" type="button" aria-label="Zamknij">Zamknij</button>
       <h3>Szuflada z płytami</h3><p id="pl-info"></p><div id="pl-lista"></div></div>
   </main>
-  <div id="obroc"><div class="tel">📱</div><b>Obróć telefon poziomo</b><p>Gra działa w poziomie. Do tego czasu jest wstrzymana.</p><button class="btn" id="b-obroc">Pełny ekran</button></div>
+  <div id="obroc"><div class="tel"></div><b>Obróć telefon poziomo</b><p>Gra działa w poziomie. Do tego czasu jest wstrzymana.</p><button class="btn" id="b-obroc">Pełny ekran</button></div>
 </section>
 
 <section id="s-msg" class="screen">
@@ -118,6 +151,7 @@
 <script src="js/data.js"></script>
 <script src="js/przyklady.js"></script>
 <script src="js/przyklady2.js"></script>
+<script src="js/dane_pulpit.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/core.js"></script>
 <script src="js/ksiazki.js"></script>
@@ -125,8 +159,11 @@
 <script src="js/fabula.js"></script>
 <script src="js/threats.js"></script>
 <script src="js/mail.js"></script>
+<script src="js/pulpit.js"></script>
+<script src="js/aplikacje.js"></script>
 <script src="js/tasks.js"></script>
 <script src="js/game.js"></script>
+<script src="js/samouczek.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

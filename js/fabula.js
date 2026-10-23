@@ -268,6 +268,11 @@ function wstep(poZakonczeniu) {
   start.onclick = poZakonczeniu;
   const zmien = $("#w-zmien");
   zmien.style.animationDelay = start.style.animationDelay;
+  // przyciski nie reagują, dopóki nie są w pełni widoczne (kliknięcie w pustym miejscu przyspiesza kartę)
+  [start, zmien].forEach(b => {
+    b.classList.remove("gotowy");
+    b.onanimationend = () => b.classList.add("gotowy");
+  });
   karta.classList.remove("szybko");
   karta.onclick = () => karta.classList.add("szybko");
   pokaz("s-intro");

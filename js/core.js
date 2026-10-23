@@ -66,10 +66,29 @@ function czasGry(t) {
 const nieskonczony = () => stan && stan.dzien > USTAW.dni;
 
 function pokaz(id) {
-  const nakladka = ["s-start", "s-msg", "s-intro", "s-wybor"].includes(id);
+  const nakladka = ["s-start", "s-msg", "s-intro", "s-wybor", "s-tutorial"].includes(id);
   document.querySelectorAll(".screen").forEach(e => e.classList.toggle("on", e.id === id || e.id === "s-game"));
   document.body.classList.toggle("menu", nakladka);
+  document.body.classList.toggle("pauza", id === "s-start" && wstrzymana && !!stan);
   dopasuj();
+  dziuraPauzy();
+}
+
+// W pauzie ciemna nakładka ma „okienka” nad półką z książkami i przyciskiem „Książki”,
+// żeby były kolorowe i było widać, że można je otworzyć.
+function dziuraPauzy() {
+  const nak = $("#s-start");
+  if (!document.body.classList.contains("pauza")) { nak.style.removeProperty("--dziura"); return; }
+  const w = innerWidth, h = innerHeight, m = 6;
+  let d = "M0 0H" + w + "V" + h + "H0Z";
+  ["#shelf", "#ksbtn"].forEach(sel => {
+    const el = $(sel);
+    if (!el || getComputedStyle(el).display === "none") return;
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return;
+    d += "M" + (r.left - m) + " " + (r.top - m) + "h" + (r.width + 2 * m) + "v" + (r.height + 2 * m) + "h" + -(r.width + 2 * m) + "Z";
+  });
+  nak.style.setProperty("--dziura", 'path(evenodd, "' + d + '")');
 }
 
 // Telefon w poziomie: bez „pokoju”, monitor wypełnia ekran. Telefon w pionie: prośba o obrót.
@@ -89,16 +108,16 @@ function dopasuj() {
   $("#floor").style.top = (przesY + 410 * skala) + "px";
 }
 new ResizeObserver(dopasuj).observe($("#stage"));
-addEventListener("resize", dopasuj);
+addEventListener("resize", () => { dopasuj(); dziuraPauzy(); });
 addEventListener("orientationchange", () => setTimeout(dopasuj, 200));
 
 function komunikat(t, c) { const s = $("#st"); s.textContent = "> " + t; s.className = c || ""; }
 function pozniej(akcja, czasMs) { stan.timery.push(setTimeout(akcja, czasMs)); }
 
+// "al" i "task" to widoki aplikacji Alerty, "ml" to Poczta. Resztę aplikacji otwiera pulpit.otworz.
 function widok(v) {
-  ["al", "ml", "task"].forEach(x => $("#v-" + x).style.display = x === v ? "block" : "none");
-  $("#t-al").classList.toggle("on", v === "al" || v === "task");
-  $("#t-ml").classList.toggle("on", v === "ml");
+  if (v === "ml") pulpit.otworz("poczta");
+  else pulpit.otworz("alerty", v === "task" ? "v-task" : "v-al");
   DZWIEKI.klik();
 }
 
@@ -125,20 +144,25 @@ function zacznijDzien(n, snap) {
   stan = {
     dzien: n, t: 0, zycia: USTAW.zycia,
     aktywne: [], ostatnieZag: [],
-    maile: [], nastepnyMail: 7000,
-    nastepnyAlert: 2500, pojawione: 0,
+    maile: [], nastepnyMail: 12000, nastepnyPilny: 110000,
+    czaty: [], nastepnyCzat: 20000,
+    pliki: pulpit.domyslnePliki(), idPliku: 10, kosz: [], nastepnyPlik: 60000,
+    zdarzenia: [], nastepneZdarzenie: 90000, operacje: [], avSkan: false, opInst: null,
+    sys: {zapora: true, ochrona: true, aktualizacja: false, instaluje: false, obce: false, pozObcego: 0},
+    nastepnyAlert: 6000, pojawione: 0,
     ostatni: performance.now(), nastepnyZapis: 0,
-    timery: [], zadanie: null, kod: "", potrzebny: 0,
+    straty: [], timery: [], zadanie: null, kod: "", potrzebny: 0,
     pkt: 0, odparte: 0, maileOk: 0, pokazaneZycia: -1, faza: null
   };
   if (snap) {   // wznowienie zapisanej doby od tej samej godziny
     Object.assign(stan, {t: snap.t, zycia: snap.zycia, pkt: snap.pkt, odparte: snap.odparte, maileOk: snap.maileOk, pojawione: 1});
-    stan.nastepnyAlert = snap.t + 3000; stan.nastepnyMail = snap.t + 7000;
+    stan.nastepnyAlert = snap.t + 5000; stan.nastepnyMail = snap.t + 12000;
+    stan.nastepnyPilny += snap.t; stan.nastepnyCzat += snap.t; stan.nastepnyPlik += snap.t; stan.nastepneZdarzenie += snap.t;
   } else usunPostep();
   const dalej = n > USTAW.dni;
-  $("#nl").textContent = dalej ? "Dzień " + n + " ∞" : "Dzień " + n + "/" + USTAW.dni;
+  $("#nl").textContent = dalej ? "Dzień " + n + "+" : "Dzień " + n + "/" + USTAW.dni;
   $("#sc").style.display = dalej ? "" : "none";
-  rysujAlerty(); rysujPoczte(); widok("al");
+  pulpit.reset(); rysujAlerty(); rysujPoczte(); rysujCzaty(); rysujAv(); rysujPanel(); rysujKosz();
   zmienFaze(true);
   komunikat(snap ? "Wracasz do gry. Powodzenia!" :
     dalej ? "Tryb nieskończony: poziom jak w dniu 5, liczą się punkty." : n === 1 ? fab().start : "Dzień się zaczął. Podpowiedzi są w książkach na półce. Noc będzie cięższa.");
@@ -151,5 +175,5 @@ function wznow() {
   if (!wstrzymana || !stan) { const sn = wczytajJSON("cybernoc_pauza", null); if (sn) zacznijDzien(sn.dzien, sn); return; }
   wstrzymana = false; stan.ostatni = performance.now();
   clearInterval(petla); petla = setInterval(krok, 100); startBrzeczenia();
-  widok("al"); pokaz("s-game"); komunikat("Wracasz do gry.");
+  pokaz("s-game"); komunikat("Wracasz do gry.");
 }

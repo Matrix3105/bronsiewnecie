@@ -30,11 +30,15 @@ const KSIAZKI = [
     "Obiecywanie pieniędzy za udostępnienie to prawie zawsze oszustwo."]},
 
   {id: "pliki", krotka: "Wirusy", tytul: "Pliki i wirusy", kolor: "#c9783b", w: 32, h: 74, podp: [
+    "Podejrzany plik na pulpicie przeskanuj antywirusem, usuń, a potem przenieś do kosza. Sam kosz nie wyleczy wirusa.",
+    "Antywirus czasem się myli. Przed usunięciem sprawdź źródło i podpis cyfrowy: swoje, znane pliki zostaw.",
+    "Gdy coś wyłącza ochronę antywirusa albo zaporę, włącz je z powrotem.",
     "Podwójne rozszerzenie (.pdf.exe) to wirus udający dokument.",
     "Programy (.exe, .scr, .bat, .js) nie są dokumentami ani zdjęciami.",
     "Cracki i „odblokowane” gry często niosą wirusa.",
     "Skanuj antywirusem to, co pobierasz z niepewnych miejsc."]},
   {id: "wifi", krotka: "Wi‑Fi", tytul: "Wi‑Fi i router", kolor: "#3b9fb0", w: 30, h: 82, podp: [
+    "Na liście urządzeń w sieci odłączaj tylko te, których nie znasz, i zmień hasło Wi‑Fi. Swoje rozpoznasz po nazwie.",
     "Podróbki sieci kopiują nazwy albo kuszą darmowym internetem bez hasła.",
     "W miejscu publicznym korzystaj z VPN albo z internetu w telefonie.",
     "Router: silne szyfrowanie, zmienione hasło panelu i aktualizacje.",
