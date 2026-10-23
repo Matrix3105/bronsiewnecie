@@ -44,6 +44,16 @@ const ZADANIA = {
     interfejs.naglowek(b, tytul, opis);
     const i = document.createElement("input"); i.maxLength = 6; i.inputMode = "numeric"; i.placeholder = "000000"; i.oninput = DZWIEKI.type;
     b.appendChild(i);
+    // telefon: klawiatura systemowa zasłania ekran (nie widać pola ani telefonu z kodem),
+    // więc zamiast niej jest własny, mały blok cyfr w grze
+    if (document.body.classList.contains("kompakt") || matchMedia("(pointer:coarse)").matches) {
+      i.inputMode = "none";
+      const kp = elem("div", "keypad");
+      const klik = (napis, akcja) => { const x = elem("button", "kp", napis); x.type = "button"; x.onclick = () => { akcja(); DZWIEKI.type(); }; kp.appendChild(x); };
+      "1234567890".split("").forEach(c => klik(c, () => { if (i.value.length < 6) i.value += c; }));
+      klik("⌫", () => { i.value = i.value.slice(0, -1); });
+      b.appendChild(kp);
+    }
     interfejs.przycisk(b, "Zatwierdź kod", () => {
       if (pulapka) {
         if (!i.value) return komunikat("Wpisz kod albo odrzuć prośbę.", "bad");
